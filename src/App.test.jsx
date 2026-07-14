@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App.jsx";
 
 afterEach(cleanup);
@@ -56,7 +56,10 @@ describe("Liang Weiye Agent landing page", () => {
     const { container } = render(<App />);
 
     expect(container.querySelectorAll(".orbit-plane")).toHaveLength(3);
-    expect(screen.getByLabelText("Agent 运行星图")).toBeVisible();
+    expect(screen.getByLabelText("Agent 运行星图")).toHaveAttribute(
+      "data-orbit-signal-color",
+      "#e54e37",
+    );
   });
 
   it("expands project details inline", async () => {
@@ -190,5 +193,21 @@ describe("Liang Weiye Agent landing page", () => {
 
     expect(screen.getByText("每周 5 天 · 6 个月以上")).toBeVisible();
     expect(screen.getByText("一周内到岗 · 重庆")).toBeVisible();
+  });
+
+  it("copies the email address and confirms success without navigating", async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    render(<App />);
+
+    expect(screen.queryByRole("link", { name: /邮箱/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "复制邮箱 lwxiaoye@163.com" }));
+
+    expect(writeText).toHaveBeenCalledWith("lwxiaoye@163.com");
+    expect(screen.getByRole("button", { name: "邮箱已复制" })).toHaveTextContent("复制成功");
   });
 });

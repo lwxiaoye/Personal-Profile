@@ -26,3 +26,6 @@ When implementing from a selected generated mock, treat that image as the source
 - Do not render perspective-flattened orbit markers on the 3D star map; the only moving signal should be the active stage color drawn along the workflow.
 - Experience should identify 青竹数智科技校企合作基地 and show CareerForge-AI (2026.05.01—2026.06.04) plus 多智能体客服 (2026.02.15—2026.04.29), alongside team-development experience and internship availability.
 - Keep the final contact section compact; it should close the page without occupying another oversized full viewport.
+- Center all insight-mask text both horizontally and vertically within the circular mask.
+- Use a small warm-red Canvas signal (`#e54e37`) on the Agent orbit; keep it circular and avoid perspective-flattened pseudo-element markers.
+- The email contact action copies `lwxiaoye@163.com` and shows an inline success confirmation instead of opening a mail client.

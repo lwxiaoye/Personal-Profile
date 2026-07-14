@@ -293,8 +293,9 @@ a:focus-visible {
   height: var(--mask-size);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 52px;
   overflow: hidden;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -302,6 +303,7 @@ a:focus-visible {
   color: #000;
   mix-blend-mode: difference;
   pointer-events: none;
+  text-align: center;
   opacity: 0;
   visibility: hidden;
 }
@@ -324,6 +326,7 @@ a:focus-visible {
   margin-bottom: 12px;
   color: #000;
   font-size: 10px;
+  letter-spacing: 0.08em;
 }
 
 .insight-mask strong {
@@ -333,6 +336,7 @@ a:focus-visible {
   line-height: 1.45;
   font-weight: 650;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .insight-mask small {
@@ -1114,7 +1118,8 @@ a:focus-visible {
   border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
-.contact-actions a {
+.contact-actions a,
+.contact-actions button {
   min-height: 84px;
   display: grid;
   grid-template-columns: 150px 1fr 24px;
@@ -1122,16 +1127,22 @@ a:focus-visible {
   gap: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   color: white;
+  background: transparent;
+  font: inherit;
+  text-align: left;
   text-decoration: none;
   transition: padding 200ms ease, background 200ms ease;
+  cursor: pointer;
 }
 
-.contact-actions a:hover {
+.contact-actions a:hover,
+.contact-actions button:hover {
   padding-inline: 16px;
   background: rgba(255, 255, 255, 0.06);
 }
 
-.contact-actions a > span {
+.contact-actions a > span,
+.contact-actions button > span {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1139,7 +1150,8 @@ a:focus-visible {
   font-size: 12px;
 }
 
-.contact-actions a > strong {
+.contact-actions a > strong,
+.contact-actions button > strong {
   font-size: 15px;
   font-weight: 500;
 }
@@ -1527,17 +1539,21 @@ a:focus-visible {
     min-height: 480px;
   }
 
-  .contact-actions a {
+  .contact-actions a,
+  .contact-actions button {
     min-height: 88px;
     grid-template-columns: 1fr 22px;
   }
 
   .contact-actions a > span,
-  .contact-actions a > strong {
+  .contact-actions a > strong,
+  .contact-actions button > span,
+  .contact-actions button > strong {
     grid-column: 1;
   }
 
-  .contact-actions a > svg {
+  .contact-actions a > svg,
+  .contact-actions button > svg {
     grid-column: 2;
     grid-row: 1 / 3;
   }

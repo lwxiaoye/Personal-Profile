@@ -3,6 +3,8 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
+  Check,
+  CopySimple,
   DownloadSimple,
   EnvelopeSimple,
   GithubLogo,
@@ -21,8 +23,29 @@ import {
   stages,
 } from "./portfolio-data.js";
 
+const EMAIL = "lwxiaoye@163.com";
+const ORBIT_SIGNAL_COLOR = "#e54e37";
+
 function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand?.("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Clipboard copy failed");
 }
 
 function AgentCanvas({ activeStage }) {
@@ -103,8 +126,8 @@ function AgentCanvas({ activeStage }) {
       const px = sx + (ex - sx) * progress;
       const py = sy + (ey - sy) * progress - Math.sin(progress * Math.PI) * 30;
       ctx.shadowBlur = 12;
-      ctx.shadowColor = start.color;
-      ctx.fillStyle = start.color;
+      ctx.shadowColor = ORBIT_SIGNAL_COLOR;
+      ctx.fillStyle = ORBIT_SIGNAL_COLOR;
       ctx.beginPath();
       ctx.arc(px, py, 4, 0, Math.PI * 2);
       ctx.fill();
@@ -130,7 +153,11 @@ function AgentCanvas({ activeStage }) {
 
 function AgentMap({ activeStage, onStageChange }) {
   return (
-    <div className="agent-map" aria-label="Agent 运行星图">
+    <div
+      className="agent-map"
+      aria-label="Agent 运行星图"
+      data-orbit-signal-color={ORBIT_SIGNAL_COLOR}
+    >
       <div className="map-header">
         <div>
           <span className="eyebrow">LIVE SYSTEM</span>
@@ -266,10 +293,12 @@ export function App() {
   const [openProject, setOpenProject] = useState("");
   const [openCapability, setOpenCapability] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
   const heroCopyRef = useRef(null);
   const insightMaskRef = useRef(null);
   const maskFrameRef = useRef(0);
   const stageLockUntilRef = useRef(0);
+  const emailResetRef = useRef(0);
 
   useEffect(() => {
     document.title = "梁伟业｜Agent 应用开发";
@@ -306,6 +335,16 @@ export function App() {
     setMobileNavOpen(false);
     scrollToSection(id);
   };
+  const handleCopyEmail = async () => {
+    try {
+      await copyText(EMAIL);
+      setEmailCopied(true);
+      window.clearTimeout(emailResetRef.current);
+      emailResetRef.current = window.setTimeout(() => setEmailCopied(false), 2200);
+    } catch {
+      setEmailCopied(false);
+    }
+  };
 
   useEffect(() => {
     const hideOutsideHero = (event) => {
@@ -320,6 +359,7 @@ export function App() {
     window.addEventListener("pointermove", hideOutsideHero, { passive: true });
     return () => {
       window.cancelAnimationFrame(maskFrameRef.current);
+      window.clearTimeout(emailResetRef.current);
       window.removeEventListener("pointermove", hideOutsideHero);
     };
   }, []);
@@ -528,11 +568,15 @@ export function App() {
             <p>2027 届 · 重庆 · 可实习 / 可合作</p>
           </div>
           <div className="contact-actions">
-            <a href="mailto:lwxiaoye@163.com">
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              aria-label={emailCopied ? "邮箱已复制" : `复制邮箱 ${EMAIL}`}
+            >
               <span><EnvelopeSimple />邮箱</span>
-              <strong>lwxiaoye@163.com</strong>
-              <ArrowUpRight />
-            </a>
+              <strong aria-live="polite">{emailCopied ? "复制成功" : EMAIL}</strong>
+              {emailCopied ? <Check /> : <CopySimple />}
+            </button>
             <a href="https://github.com/lwxiaoye" target="_blank" rel="noreferrer" aria-label="GitHub">
               <span><GithubLogo />代码与项目</span>
               <strong>github.com/lwxiaoye</strong>
