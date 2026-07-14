@@ -11,6 +11,8 @@
   --muted: #706f6b;
   --line: rgba(18, 18, 16, 0.17);
   --red: #e24835;
+  --header-height: 66px;
+  --viewport-height: 100svh;
 }
 
 * {
@@ -51,7 +53,7 @@ a:focus-visible {
   top: 0;
   left: 3.2vw;
   right: 3.2vw;
-  height: 72px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -108,18 +110,20 @@ a:focus-visible {
 
 .hero {
   position: relative;
-  min-height: 900px;
+  min-height: var(--viewport-height);
+  height: var(--viewport-height);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(480px, 0.95fr);
   gap: 2vw;
-  padding: 120px 3.2vw 76px;
+  padding: calc(var(--header-height) + 24px) 3.2vw 54px;
+  overflow: hidden;
   border-bottom: 1px solid var(--line);
 }
 
 .hero-copy {
   position: relative;
   min-width: 0;
-  padding: 82px 0 0 1vw;
+  padding: clamp(30px, 5vh, 50px) 0 56px 1vw;
   overflow: hidden;
   cursor: crosshair;
 }
@@ -324,10 +328,11 @@ a:focus-visible {
 
 .insight-mask strong {
   position: relative;
-  max-width: 230px;
-  font-size: 16px;
-  line-height: 1.7;
-  font-weight: 550;
+  max-width: 250px;
+  font-size: 20px;
+  line-height: 1.45;
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }
 
 .insight-mask small {
@@ -386,13 +391,67 @@ a:focus-visible {
   width: 100%;
   aspect-ratio: 1.15 / 1;
   max-height: 610px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 
 .agent-canvas {
   position: absolute;
+  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.orbit-space {
+  position: absolute;
+  z-index: 0;
+  inset: 13% 18%;
+  transform-style: preserve-3d;
+  animation: orbit-space-breathe 8s ease-in-out infinite;
+}
+
+.orbit-plane {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(18, 18, 16, 0.16);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.orbit-plane-a {
+  animation: orbit-a 22s linear infinite;
+}
+
+.orbit-plane-b {
+  inset: 9%;
+  border-style: dashed;
+  animation: orbit-b 18s linear infinite reverse;
+}
+
+.orbit-plane-c {
+  inset: 18%;
+  animation: orbit-c 15s linear infinite;
+}
+
+@keyframes orbit-space-breathe {
+  0%, 100% { transform: translateY(0) rotateZ(0) scale(1); }
+  50% { transform: translateY(-5px) rotateZ(2deg) scale(1.02); }
+}
+
+@keyframes orbit-a {
+  from { transform: rotateX(64deg) rotateZ(-14deg); }
+  to { transform: rotateX(64deg) rotateZ(346deg); }
+}
+
+@keyframes orbit-b {
+  from { transform: rotateY(66deg) rotateZ(20deg); }
+  to { transform: rotateY(66deg) rotateZ(380deg); }
+}
+
+@keyframes orbit-c {
+  from { transform: rotateX(72deg) rotateY(34deg) rotateZ(0); }
+  to { transform: rotateX(72deg) rotateY(34deg) rotateZ(360deg); }
 }
 
 .task-core {
@@ -411,6 +470,12 @@ a:focus-visible {
   transform: translate(-50%, -50%);
   background: rgba(248, 247, 243, 0.85);
   backdrop-filter: blur(4px);
+  animation: task-core-float 4.8s ease-in-out infinite;
+}
+
+@keyframes task-core-float {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, calc(-50% - 5px)) scale(1.025); }
 }
 
 .task-core::after {
@@ -518,7 +583,7 @@ a:focus-visible {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 72px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,7 +627,11 @@ a:focus-visible {
 }
 
 .section {
-  padding: 120px 4.2vw;
+  min-height: var(--viewport-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(72px, 9vh, 112px) 4.2vw;
   scroll-margin-top: 40px;
 }
 
@@ -658,9 +727,9 @@ a:focus-visible {
 
 .project-detail {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(360px, 1fr);
-  gap: 70px;
-  padding: 0 70px 34px;
+  grid-template-columns: 1fr 1.2fr 0.85fr;
+  gap: clamp(28px, 3vw, 56px);
+  padding: 4px 70px 38px;
 }
 
 .project-detail[hidden] {
@@ -670,22 +739,55 @@ a:focus-visible {
 .project-detail p {
   margin: 0;
   color: #3c3c39;
-  line-height: 1.85;
+  line-height: 1.75;
 }
 
-.project-detail > div {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.project-detail > div > span {
-  max-width: 360px;
+.detail-label {
+  display: block;
+  margin-bottom: 10px;
   color: var(--muted);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  line-height: 1.8;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.project-highlights ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.project-highlights li {
+  margin-bottom: 7px;
+  line-height: 1.65;
+}
+
+.project-contribution {
+  padding-left: 22px;
+  border-left: 1px solid var(--line);
+}
+
+.project-contribution strong {
+  display: block;
+  line-height: 1.6;
+}
+
+.project-contribution small {
+  display: block;
+  margin-top: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.link-unavailable {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .project-detail a,
@@ -699,6 +801,7 @@ a:focus-visible {
 }
 
 .about {
+  min-height: var(--viewport-height);
   background: #11110f;
   color: white;
 }
@@ -834,27 +937,98 @@ a:focus-visible {
   line-height: 1.5;
 }
 
-.timeline {
+.experience-base {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr 0.8fr;
+  align-items: center;
+  gap: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.experience-base h3 {
+  margin: 4px 0 0;
+  font-size: 24px;
+}
+
+.experience-base p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.experience-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.timeline > div {
-  min-height: 260px;
-  padding: 48px 50px 48px 0;
+.experience-card {
+  min-height: 276px;
+  padding: 28px 40px 26px 0;
   border-bottom: 1px solid var(--line);
 }
 
-.timeline > div + div {
-  padding-left: 50px;
+.experience-card + .experience-card {
+  padding-left: 40px;
   border-left: 1px solid var(--line);
 }
 
-.timeline time { color: var(--red); font-size: 11px; }
-.timeline h3 { margin: 60px 0 8px; font-size: 30px; }
-.timeline p { margin: 0; color: var(--muted); }
+.experience-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  color: var(--red);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.experience-card h3 {
+  margin: 28px 0 5px;
+  font-size: 28px;
+}
+
+.experience-role {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.experience-card p {
+  max-width: 690px;
+  margin: 20px 0 18px;
+  color: #3c3c39;
+  line-height: 1.75;
+}
+
+.experience-card strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.availability-strip {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  align-items: center;
+  min-height: 70px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.availability-strip span {
+  color: var(--red);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.availability-strip strong {
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+}
 
 .contact {
+  min-height: 610px;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   background: #dfe7e6;
@@ -862,18 +1036,18 @@ a:focus-visible {
 }
 
 .contact-intro {
-  min-height: 730px;
+  min-height: 540px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 96px 5vw 60px;
+  padding: 64px 5vw 48px;
 }
 
 .availability {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: 70px;
+  margin-top: 34px;
   font-family: "IBM Plex Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
@@ -889,8 +1063,8 @@ a:focus-visible {
 
 .contact h2 {
   max-width: 930px;
-  margin: 50px 0 0;
-  font-size: clamp(58px, 6.3vw, 104px);
+  margin: 34px 0 0;
+  font-size: clamp(48px, 5vw, 76px);
   line-height: 1.08;
 }
 
@@ -898,15 +1072,15 @@ a:focus-visible {
   max-width: 610px;
   margin: auto 0 0;
   color: #4a514f;
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1.9;
 }
 
 .contact-panel {
-  min-height: 730px;
+  min-height: 540px;
   display: flex;
   flex-direction: column;
-  padding: 96px 3.8vw 44px;
+  padding: 64px 3.8vw 36px;
   background: var(--ink);
   color: white;
 }
@@ -926,7 +1100,7 @@ a:focus-visible {
 
 .contact-panel-top strong {
   margin-top: 22px;
-  font-size: clamp(34px, 3.2vw, 56px);
+  font-size: clamp(32px, 2.7vw, 46px);
   font-weight: 550;
 }
 
@@ -941,7 +1115,7 @@ a:focus-visible {
 }
 
 .contact-actions a {
-  min-height: 108px;
+  min-height: 84px;
   display: grid;
   grid-template-columns: 150px 1fr 24px;
   align-items: center;
@@ -1014,6 +1188,56 @@ a:focus-visible {
   }
 }
 
+@media (min-width: 821px) and (max-height: 800px) {
+  .hero {
+    padding-top: calc(var(--header-height) + 16px);
+  }
+
+  .hero-copy {
+    padding-top: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(72px, 7.5vw, 104px);
+  }
+
+  .hero-title-zone {
+    margin-top: 24px;
+  }
+
+  .red-rule {
+    margin-bottom: 18px;
+  }
+
+  .hero h2 {
+    font-size: clamp(28px, 2.8vw, 38px);
+  }
+
+  .hero-stack p,
+  .hero-actions,
+  .hero-statement,
+  .hero-metrics {
+    margin-top: 20px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    height: 48px;
+  }
+
+  .hero-statement span {
+    height: 34px;
+  }
+
+  .hero-metrics div {
+    padding-top: 12px;
+  }
+
+  .map-stage {
+    max-height: 520px;
+  }
+}
+
 @media (max-width: 820px) {
   .site-header {
     height: 62px;
@@ -1062,6 +1286,7 @@ a:focus-visible {
   }
 
   .hero {
+    height: auto;
     min-height: auto;
     grid-template-columns: 1fr;
     padding: 92px 22px 60px;
@@ -1122,7 +1347,21 @@ a:focus-visible {
   }
 
   .map-stage {
-    min-height: 420px;
+    min-height: 390px;
+    perspective: 700px;
+  }
+
+  .orbit-space {
+    inset: 18% 14%;
+  }
+
+  .orbit-plane-c {
+    display: none;
+  }
+
+  .task-core {
+    width: 82px;
+    height: 82px;
   }
 
   .stage-plan { right: 0; }
@@ -1137,7 +1376,13 @@ a:focus-visible {
   }
 
   .section {
+    min-height: auto;
     padding: 82px 22px;
+  }
+
+  .about,
+  .contact {
+    min-height: auto;
   }
 
   .section-heading {
@@ -1173,8 +1418,14 @@ a:focus-visible {
     flex-direction: column;
   }
 
+  .project-contribution {
+    padding: 22px 0 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
   .about-grid,
-  .timeline {
+  .experience-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1219,15 +1470,33 @@ a:focus-visible {
     padding: 32px 16px 40px;
   }
 
-  .timeline > div,
-  .timeline > div + div {
-    min-height: 220px;
-    padding: 40px 0;
+  .experience-base {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 28px 0;
+  }
+
+  .experience-card,
+  .experience-card + .experience-card {
+    min-height: auto;
+    padding: 34px 0;
     border-left: 0;
   }
 
-  .timeline h3 {
-    margin-top: 40px;
+  .availability-strip {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 18px 0;
+  }
+
+  .availability-strip span,
+  .availability-strip strong {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .contact {
@@ -1236,8 +1505,8 @@ a:focus-visible {
 
   .contact-intro,
   .contact-panel {
-    min-height: 620px;
-    padding: 76px 22px 42px;
+    min-height: auto;
+    padding: 64px 22px 42px;
   }
 
   .availability {
@@ -1255,11 +1524,11 @@ a:focus-visible {
   }
 
   .contact-panel {
-    min-height: 580px;
+    min-height: 480px;
   }
 
   .contact-actions a {
-    min-height: 104px;
+    min-height: 88px;
     grid-template-columns: 1fr 22px;
   }
 
@@ -1288,4 +1557,11 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .orbit-space,
+  .orbit-plane,
+  .task-core,
+  .map-status i,
+  .scroll-cue svg {
+    animation: none !important;
+  }
 }

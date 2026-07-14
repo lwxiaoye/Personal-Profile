@@ -12,131 +12,14 @@ import {
   Plus,
   X,
 } from "@phosphor-icons/react";
-
-const stages = [
-  { id: "intent", name: "Intent", detail: "意图识别", color: "#2db9c7", x: 50, y: 14 },
-  { id: "plan", name: "Plan", detail: "任务规划", color: "#d7a24a", x: 82, y: 43 },
-  { id: "rag", name: "RAG", detail: "知识检索", color: "#69ac69", x: 69, y: 81 },
-  { id: "tools", name: "Tools", detail: "工具执行", color: "#e54e37", x: 27, y: 78 },
-  { id: "verify", name: "Verify", detail: "结果校验", color: "#2db9c7", x: 17, y: 43 },
-];
-
-const insights = {
-  intent: {
-    kicker: "AGENT BUILDER",
-    primary: "梁伟业",
-    secondary: "CHONGQING / 2026",
-  },
-  plan: {
-    kicker: "AGENT LOOP / RUNNING",
-    primary: "理解 → 规划 → 检索 → 执行 → 校验",
-    secondary: "把复杂任务拆成可验证的步骤",
-  },
-  rag: {
-    kicker: "KNOWLEDGE / GROUNDED",
-    primary: "LangGraph / RAG / Harness / SSE",
-    secondary: "让答案有依据，让流程可追踪",
-  },
-  tools: {
-    kicker: "TOOL CALL / EXECUTING",
-    primary: "读取 · 检索 · 更新 · 导出",
-    secondary: "Agent 不只回答，更能完成动作",
-  },
-  verify: {
-    kicker: "RESULT / VERIFIED",
-    primary: "3 项目 / 95% 意图识别 / 91.3% 召回",
-    secondary: "用工程约束换取稳定交付",
-  },
-};
-
-const projects = [
-  {
-    id: "careerforge",
-    index: "01",
-    title: "CareerForge-AI",
-    label: "高校学生就业辅助平台",
-    summary: "简历助手与 AI 面试官的完整 Agentic Loop",
-    description:
-      "基于 Function Calling 与 Harness Engineering，让 Agent 可以读取、生成、局部更新和撤销简历，并围绕目标岗位完成多轮模拟面试与质量校验。",
-    stack: "React / TypeScript / FastAPI / MySQL / Redis / SSE",
-    href: "https://github.com/Dloading666/CareerForge-AI",
-  },
-  {
-    id: "service",
-    index: "02",
-    title: "多智能体客服",
-    label: "调度中心 + 专业 Agent",
-    summary: "意图分类、动态路由、知识检索与安全护栏",
-    description:
-      "以 LangGraph 显式状态图组织分类、路由和回复生成。标签规范化把意图识别准确率从约 70% 提升至约 95%，并用 SSE 改善等待反馈。",
-    stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
-    href: "https://lwxiaoye.top",
-  },
-  {
-    id: "medical",
-    index: "03",
-    title: "医疗 RAG",
-    label: "检索增强与事实核验",
-    summary: "混合检索、查询改写、主动追问与自纠错闭环",
-    description:
-      "将稠密与稀疏检索通过 RRF 融合，结合检索质量评估、联网补充和事实核验，使 RAG 召回率达到 91.3%，精确率达到 92.1%。",
-    stack: "FastAPI / LangGraph / Milvus / BM25 / PostgreSQL / Docker",
-    href: "https://lwxiaoye.top",
-  },
-];
-
-const capabilities = [
-  {
-    id: "orchestration",
-    index: "01",
-    eyebrow: "ORCHESTRATION",
-    title: "Agent 编排",
-    stack: "LangGraph · LangChain · ReAct · Function Calling · MCP · Skills",
-    description: "用显式状态图组织分类、路由、工具调用与结果回收",
-    proof: "多智能体客服意图识别约 95%",
-    methods: ["StateGraph 条件边", "多 Agent 动态路由", "Checkpoint 会话持久化"],
-  },
-  {
-    id: "knowledge",
-    index: "02",
-    eyebrow: "KNOWLEDGE",
-    title: "检索增强",
-    stack: "RAG · GraphRAG · Embedding · Milvus · BM25 · Neo4j",
-    description: "组合查询改写、混合召回、RRF 融合与事实核验，避免只做单路向量搜索",
-    proof: "医疗 RAG 召回率 91.3% · 精确率 92.1%",
-    methods: ["Dense + Sparse 混合检索", "Graph 社区发现", "查询改写与并行子问题"],
-  },
-  {
-    id: "harness",
-    index: "03",
-    eyebrow: "HARNESS",
-    title: "工具与约束",
-    stack: "Agentic Loop · JSON Schema · Tool Calling · Result Validation",
-    description: "把模型输出放进可验证的 Harness，让工具调用、写入和回滚都有边界",
-    proof: "简历读取、生成、局部更新、撤销与 PDF 导出闭环",
-    methods: ["写前快照与撤销恢复", "字段级输出校验", "工具权限与参数约束"],
-  },
-  {
-    id: "reliability",
-    index: "04",
-    eyebrow: "RELIABILITY",
-    title: "可靠性与安全",
-    stack: "Guardrails · Fallback · Prompt Injection Defense · Evaluation",
-    description: "围绕异常输出、越界意图与检索失败设计短路、回退和质量评估节点",
-    proof: "字段缺失、分数异常、报告为空时不中断主流程",
-    methods: ["Out-of-scope 安全短路", "失败自动回退重试", "6 维 Rubric 评分"],
-  },
-  {
-    id: "engineering",
-    index: "05",
-    eyebrow: "ENGINEERING",
-    title: "全栈交付",
-    stack: "FastAPI · React · TypeScript · PostgreSQL · Redis · Docker · SSE",
-    description: "从模型接入、状态存储和流式接口，到前端反馈与生产异常路径完整交付",
-    proof: "SSE 将同步等待升级为毫秒级首字反馈",
-    methods: ["前后端类型化契约", "多服务会话隔离", "Docker 化部署"],
-  },
-];
+import {
+  availabilityFacts,
+  capabilities,
+  experienceProjects,
+  insights,
+  projects,
+  stages,
+} from "./portfolio-data.js";
 
 function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -161,7 +44,7 @@ function AgentCanvas({ activeStage }) {
     let raf = 0;
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       const width = Math.max(rect.width, 1);
       const height = Math.max(rect.height, 1);
       if (canvas.width !== Math.round(width * ratio)) {
@@ -177,14 +60,20 @@ function AgentCanvas({ activeStage }) {
       const activeIndex = stages.findIndex((stage) => stage.id === activeStage);
       frame += 0.006;
 
-      ctx.lineWidth = 0.8;
-      [0.56, 0.78, 1].forEach((size, index) => {
-        ctx.strokeStyle = index === 1 ? "rgba(20,20,18,.25)" : "rgba(20,20,18,.12)";
-        ctx.setLineDash(index === 1 ? [3, 5] : []);
+      const drawFlow = (x1, y1, x2, y2, index, color, lineWidth, offsetY = 0) => {
+        ctx.setLineDash([]);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
         ctx.beginPath();
-        ctx.ellipse(cx, cy, scale * size * 1.08, scale * size * 0.72, index * 0.44, 0, Math.PI * 2);
+        ctx.moveTo(x1, y1 + offsetY);
+        ctx.quadraticCurveTo(
+          cx + Math.sin(index) * 32,
+          cy + Math.cos(index) * 24 + offsetY,
+          x2,
+          y2 + offsetY,
+        );
         ctx.stroke();
-      });
+      };
 
       stages.forEach((stage, index) => {
         const next = stages[(index + 1) % stages.length];
@@ -192,13 +81,16 @@ function AgentCanvas({ activeStage }) {
         const y1 = (stage.y / 100) * height;
         const x2 = (next.x / 100) * width;
         const y2 = (next.y / 100) * height;
-        ctx.setLineDash([]);
-        ctx.strokeStyle = index === activeIndex ? "rgba(20,20,18,.68)" : "rgba(20,20,18,.19)";
-        ctx.lineWidth = index === activeIndex ? 1.2 : 0.8;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.quadraticCurveTo(cx + Math.sin(index) * 32, cy + Math.cos(index) * 24, x2, y2);
-        ctx.stroke();
+        drawFlow(x1, y1, x2, y2, index, "rgba(20,20,18,.06)", 1.2, 8);
+        drawFlow(
+          x1,
+          y1,
+          x2,
+          y2,
+          index,
+          index === activeIndex ? "rgba(20,20,18,.68)" : "rgba(20,20,18,.18)",
+          index === activeIndex ? 1.2 : 0.8,
+        );
       });
 
       const start = stages[Math.max(activeIndex, 0)];
@@ -248,6 +140,11 @@ function AgentMap({ activeStage, onStageChange }) {
       </div>
       <div className="map-stage">
         <AgentCanvas activeStage={activeStage} />
+        <div className="orbit-space" aria-hidden="true">
+          <span className="orbit-plane orbit-plane-a" />
+          <span className="orbit-plane orbit-plane-b" />
+          <span className="orbit-plane orbit-plane-c" />
+        </div>
         <div className="task-core">
           <span>TASK CORE</span>
           <strong>任务核心</strong>
@@ -292,12 +189,39 @@ function ProjectRow({ project, open, onToggle }) {
         <span className="project-toggle" aria-hidden="true">{open ? <Minus /> : <Plus />}</span>
       </button>
       <div className="project-detail" hidden={!open}>
-        <p>{project.description}</p>
-        <div>
-          <span>{project.stack}</span>
-          <a href={project.href} target="_blank" rel="noreferrer" aria-label={`查看 ${project.title} 源码`}>
-            查看项目 <ArrowUpRight weight="bold" />
-          </a>
+        <div className="project-responsibility">
+          <span className="detail-label">项目与职责</span>
+          <p>{project.responsibility}</p>
+        </div>
+        <div className="project-highlights">
+          <span className="detail-label">关键实现</span>
+          <ul>
+            {project.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+          </ul>
+        </div>
+        <div className="project-contribution">
+          <span className="detail-label">团队贡献</span>
+          <strong>{project.contribution}</strong>
+          <small>{project.stack}</small>
+          <div className="project-links">
+            {project.livePath ? (
+              <a href={project.livePath} aria-label={`在线体验 ${project.title}`}>
+                在线体验 <ArrowUpRight weight="bold" />
+              </a>
+            ) : (
+              <span className="link-unavailable">部署地址待提供</span>
+            )}
+            {project.sourceHref && (
+              <a
+                href={project.sourceHref}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`查看 ${project.title} 源码`}
+              >
+                查看源码 <ArrowUpRight weight="bold" />
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </article>
@@ -345,8 +269,16 @@ export function App() {
   const heroCopyRef = useRef(null);
   const insightMaskRef = useRef(null);
   const maskFrameRef = useRef(0);
+  const stageLockUntilRef = useRef(0);
 
-  const setInsight = (stage) => setActiveStage(stage);
+  useEffect(() => {
+    document.title = "梁伟业｜Agent 应用开发";
+  }, []);
+
+  const selectStage = (stage, lockMs = 0) => {
+    if (lockMs) stageLockUntilRef.current = Date.now() + lockMs;
+    setActiveStage(stage);
+  };
   const updateMaskPosition = (x, y) => {
     const mask = insightMaskRef.current;
     if (!mask) return;
@@ -392,6 +324,17 @@ export function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      if (Date.now() < stageLockUntilRef.current) return;
+      setActiveStage((current) => {
+        const index = stages.findIndex((stage) => stage.id === current);
+        return stages[(index + 1) % stages.length].id;
+      });
+    }, 2400);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <main>
       <header className="site-header">
@@ -430,30 +373,34 @@ export function App() {
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
         >
-          <div className="hero-zone hero-name-zone" onMouseEnter={() => setInsight("intent")}>
+          <div className="hero-zone hero-name-zone" onMouseEnter={() => selectStage("intent", 2600)}>
             <span className="eyebrow">AGENT APPLICATION DEVELOPER</span>
             <h1>梁伟业</h1>
           </div>
-          <div className="hero-zone hero-title-zone" data-testid="hero-title-zone" onMouseEnter={() => setInsight("plan")}>
+          <div className="hero-zone hero-title-zone" data-testid="hero-title-zone" onMouseEnter={() => selectStage("plan", 2600)}>
             <span className="red-rule" />
-            <h2>构建真正完成任务的 Agent</h2>
+            <h2>把 Agent 做成真正能交付的产品</h2>
           </div>
-          <div className="hero-zone hero-stack" onMouseEnter={() => setInsight("rag")}>
+          <div className="hero-zone hero-stack" onMouseEnter={() => selectStage("rag", 2600)}>
             <p>Agent 应用开发 / LangGraph / RAG / Harness Engineering</p>
           </div>
-          <div className="hero-actions" onMouseEnter={() => setInsight("tools")}>
+          <div className="hero-actions" onMouseEnter={() => selectStage("tools", 2600)}>
             <button type="button" className="primary-button" onClick={() => scrollToSection("projects")}>
               查看项目 <ArrowRight weight="bold" />
             </button>
-            <a className="secondary-button" href="/梁伟业简历_Agent开发.pdf" target="_blank">
+            <a
+              className="secondary-button"
+              href="/梁伟业简历_Agent开发.pdf"
+              download="梁伟业简历_Agent开发.pdf"
+            >
               下载简历 <DownloadSimple weight="bold" />
             </a>
           </div>
-          <div className="hero-statement" onMouseEnter={() => setInsight("plan")}>
+          <div className="hero-statement" onMouseEnter={() => selectStage("plan", 2600)}>
             <span />
             <p>从意图识别，到工具执行，再到结果校验</p>
           </div>
-          <div className="hero-metrics" onMouseEnter={() => setInsight("verify")}>
+          <div className="hero-metrics" onMouseEnter={() => selectStage("verify", 2600)}>
             <div><strong>3 个完整 Agent 项目</strong><span>端到端落地</span></div>
             <div><strong>意图识别约 95%</strong><span>多场景评测</span></div>
             <div><strong>RAG 召回率 91.3%</strong><span>领域知识库评测</span></div>
@@ -472,7 +419,10 @@ export function App() {
           </div>
         </div>
 
-        <AgentMap activeStage={activeStage} onStageChange={setInsight} />
+        <AgentMap
+          activeStage={activeStage}
+          onStageChange={(stage) => selectStage(stage, 5000)}
+        />
         <div className="hero-next-band" aria-hidden="true">
           <span />
           <p>从意图识别，到工具执行，再到结果校验</p>
@@ -532,12 +482,35 @@ export function App() {
       </section>
 
       <section className="experience section" id="experience">
-        <div className="section-heading compact">
+        <div className="section-heading">
           <div><span className="section-index">/ 04</span><h2>经历</h2></div>
+          <p>两段校企合作项目都在团队协作中完成，覆盖 Agent 工作流、知识检索、工具调用和前后端联调。</p>
         </div>
-        <div className="timeline">
-          <div><time>2023.09 — 2027.06</time><h3>重庆工程学院</h3><p>软件工程 · 全日制本科</p></div>
-          <div><time>NOW</time><h3>Agent 应用开发</h3><p>持续构建智能体、知识检索与 AI 增强开发项目</p></div>
+        <div className="experience-base">
+          <div>
+            <span className="detail-label">SCHOOL–ENTERPRISE BASE</span>
+            <h3>青竹数智科技校企合作基地</h3>
+          </div>
+          <p>Agent 应用开发 · 团队开发经验</p>
+          <p>重庆工程学院 · 软件工程本科 · 2027 届</p>
+        </div>
+        <div className="experience-grid">
+          {experienceProjects.map((item, index) => (
+            <article className="experience-card" key={item.title}>
+              <div className="experience-card-top">
+                <span className="experience-number">0{index + 1}</span>
+                <time>{item.period}</time>
+              </div>
+              <h3>{item.title}</h3>
+              <span className="experience-role">{item.role}</span>
+              <p>{item.description}</p>
+              <strong>{item.proof}</strong>
+            </article>
+          ))}
+        </div>
+        <div className="availability-strip" aria-label="实习到岗信息">
+          <span>INTERNSHIP AVAILABILITY</span>
+          {availabilityFacts.map((fact) => <strong key={fact}>{fact}</strong>)}
         </div>
       </section>
 

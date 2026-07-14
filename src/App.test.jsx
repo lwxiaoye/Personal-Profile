@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { App } from "./App.jsx";
@@ -6,6 +6,16 @@ import { App } from "./App.jsx";
 afterEach(cleanup);
 
 describe("Liang Weiye Agent landing page", () => {
+  it("presents the approved recruiter-facing identity", () => {
+    render(<App />);
+
+    expect(document.title).toBe("梁伟业｜Agent 应用开发");
+    expect(screen.getByRole("heading", { level: 1, name: "梁伟业" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "把 Agent 做成真正能交付的产品" }),
+    ).toBeVisible();
+  });
+
   it("starts with the identity insight and intent node active", () => {
     render(<App />);
 
@@ -42,6 +52,13 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByText("TOOL CALL / EXECUTING")).toBeVisible();
   });
 
+  it("renders three restrained 3D orbit planes around the agent core", () => {
+    const { container } = render(<App />);
+
+    expect(container.querySelectorAll(".orbit-plane")).toHaveLength(3);
+    expect(screen.getByLabelText("Agent 运行星图")).toBeVisible();
+  });
+
   it("expands project details inline", async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -50,6 +67,32 @@ describe("Liang Weiye Agent landing page", () => {
 
     expect(screen.getByText("简历助手与 AI 面试官的完整 Agentic Loop")).toBeVisible();
     expect(screen.getByRole("link", { name: "查看 CareerForge-AI 源码" })).toBeVisible();
+  });
+
+  it("shows concrete responsibility and team contribution in project details", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
+
+    expect(screen.getByText(/我负责 AI 面试官核心模块/)).toBeVisible();
+    expect(screen.getByText(/能独立接住一条 AI 功能链路/)).toBeVisible();
+    expect(screen.getByText(/6 维评分/)).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
+    expect(screen.getByText(/我负责 AI 面试官核心模块/)).not.toBeVisible();
+    expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
+  });
+
+  it("does not expose fake live links before deployment paths are supplied", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const trigger = screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" });
+    await user.click(trigger);
+
+    expect(within(trigger.closest("article")).getByText("部署地址待提供")).toBeVisible();
+    expect(screen.queryByRole("link", { name: /在线体验 CareerForge-AI/ })).not.toBeInTheDocument();
   });
 
   it("tracks the insight mask directly inside the left hero area", () => {
@@ -112,5 +155,40 @@ describe("Liang Weiye Agent landing page", () => {
       "https://github.com/lwxiaoye",
     );
     expect(screen.getByText("2027 届 · 重庆 · 可实习 / 可合作")).toBeVisible();
+  });
+
+  it("downloads the bundled resume without opening a fragile preview tab", () => {
+    render(<App />);
+
+    expect(screen.getByRole("link", { name: /下载简历/ })).toHaveAttribute(
+      "href",
+      "/梁伟业简历_Agent开发.pdf",
+    );
+    expect(screen.getByRole("link", { name: /下载简历/ })).toHaveAttribute(
+      "download",
+      "梁伟业简历_Agent开发.pdf",
+    );
+    expect(screen.getByRole("link", { name: /下载简历/ })).not.toHaveAttribute("target");
+  });
+
+  it("shows the two confirmed school-enterprise projects and internship availability", () => {
+    render(<App />);
+
+    const experience = screen.getByRole("heading", { level: 2, name: "经历" }).closest("section");
+    expect(within(experience).getByText("青竹数智科技校企合作基地")).toBeVisible();
+    expect(within(experience).getByRole("heading", { name: "CareerForge-AI" })).toBeVisible();
+    expect(within(experience).getByText("2026.05.01 — 2026.06.04")).toBeVisible();
+    expect(within(experience).getByRole("heading", { name: "多智能体客服" })).toBeVisible();
+    expect(within(experience).getByText("2026.02.15 — 2026.04.29")).toBeVisible();
+    expect(within(experience).getByText("每周可出勤 5 天")).toBeVisible();
+    expect(within(experience).getByText("可实习 6 个月以上")).toBeVisible();
+    expect(within(experience).getByText("一周内到岗")).toBeVisible();
+  });
+
+  it("prioritizes recruiter evidence inside the synchronized insight mask", () => {
+    render(<App />);
+
+    expect(screen.getByText("每周 5 天 · 6 个月以上")).toBeVisible();
+    expect(screen.getByText("一周内到岗 · 重庆")).toBeVisible();
   });
 });
