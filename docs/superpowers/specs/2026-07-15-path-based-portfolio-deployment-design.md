@@ -1,69 +1,83 @@
-# Path-based portfolio deployment design
+# 单域名路径式作品集部署设计
 
-## Goal
+## 一、目标
 
-Turn `lwxiaoye.top` into a path-based portfolio hub without losing the existing CareerForge-AI deployment or its data:
+将 `lwxiaoye.top` 调整为路径式个人作品集中心，同时保留服务器上已经运行的 CareerForge-AI 及其现有数据：
 
-- `/` serves Liang Weiye's personal landing page.
-- `/career/` serves the existing CareerForge-AI application.
-- `/service/` and `/medical/` are reserved for later deployments and are not implemented in this release.
-- The expanded CareerForge-AI project card exposes a `前往体验` link to `/career/` while retaining its source-code link.
+- `/`：展示梁伟业的个人介绍网站。
+- `/career/`：展示现有 CareerForge-AI 应用。
+- `/service/` 和 `/medical/`：留给后续部署，本次不实现。
+- 展开个人主页中的 CareerForge-AI 项目后，显示“前往体验”入口并跳转至 `/career/`；原有“查看源码”入口继续保留。
 
-## Current production state
+## 二、服务器现状
 
-1Panel OpenResty currently proxies every request for `lwxiaoye.top` to the CareerForge frontend container on host port `8080`. CareerForge uses React, React Router, and Vite with root-relative routes and assets. Its frontend Nginx proxies root-level `/api/`, `/data/`, `/static/`, and related paths to the backend container. MySQL, Redis, backend, worker, and frontend containers are healthy.
+目前，1Panel 管理的 OpenResty 会把 `lwxiaoye.top` 的全部请求转发到 CareerForge 前端容器的宿主机 `8080` 端口。因此，访问根路径或任意其他路径时，都会返回 CareerForge 页面。
 
-## Architecture
+CareerForge 前端使用 React、React Router 和 Vite，当前所有页面地址、静态资源地址和服务请求都以根路径 `/` 为起点。CareerForge 的 MySQL、Redis、后端、异步任务和前端容器目前均正常运行。
 
-The 1Panel-managed OpenResty vhost remains the only public HTTP entry point.
+## 三、整体架构
 
-- Personal landing assets are built locally and deployed to the vhost document root at `/www/sites/lwxiaoye.top/index`.
-- `/career` redirects permanently to `/career/`.
-- `/career/` is reverse-proxied to the CareerForge frontend container on `127.0.0.1:8080`, stripping the public `/career/` prefix before the request reaches the container.
-- CareerForge is rebuilt with Vite base `/career/`, React Router basename `/career`, and public API base `/career`. Browser requests therefore stay under the CareerForge namespace; the outer proxy strips the namespace and the existing inner Nginx/backend routes continue to work.
-- Host port `8080` is bound to loopback only, preventing direct public access that bypasses TLS and the public path layout.
+继续使用 1Panel 管理的 OpenResty 作为唯一公网入口：
 
-## CareerForge path handling
+- 在本地构建个人介绍网站，并把构建结果部署到服务器网站目录 `/www/sites/lwxiaoye.top/index`。
+- 访问 `/career` 时，自动跳转到 `/career/`，避免浏览器错误计算页面资源地址。
+- 访问 `/career/` 及其下级地址时，由 OpenResty 转发到 CareerForge 前端容器的 `127.0.0.1:8080`，并在转发时去掉公网地址中的 `/career/` 前缀。
+- CareerForge 使用 `/career/` 作为前端资源基础路径，使用 `/career` 作为页面路由和服务请求的公共前缀。
+- 将 CareerForge 的宿主机 `8080` 端口限制为仅本机访问，防止外部用户绕过 HTTPS 和正式域名直接访问容器。
 
-The frontend must produce `/career/assets/...` URLs and route internal navigation under `/career`. All calls made through the shared authenticated request helpers use `/career` as the public base. Streaming requests, uploads, downloads, feedback images, generated static files, and any backend-returned root-relative URLs are audited so they remain inside `/career/` in the browser.
+## 四、CareerForge 路径调整
 
-The backend retains its existing `/api/v1` routes and storage configuration. No database schema, tenant data, credentials, Redis data, or model configuration is migrated.
+CareerForge 构建后的脚本、样式和图片地址统一为 `/career/assets/...`，登录页、学生端和管理端等页面统一位于 `/career` 下。
 
-## Landing-page behavior
+浏览器发起的普通请求、登录续期、文件上传下载、SSE 流式输出、反馈图片和生成文件请求都必须位于 `/career/...` 下。请求抵达 OpenResty 后会去掉 `/career/` 前缀，再交给 CareerForge 容器内原有的前端代理和后端服务处理。
 
-The CareerForge-AI project data uses `livePath: "/career/"`. When expanded, the project links display `前往体验` and `查看源码` as separate actions. The experience link uses same-site navigation. The service and medical project cards continue to show that no deployment address is available.
+CareerForge 后端继续使用现有 `/api/v1` 接口，不修改数据库结构、租户数据、用户数据、Redis 数据、模型配置或密钥。
 
-## Rollout and rollback
+## 五、个人主页交互
 
-Before changes, create timestamped backups of the 1Panel vhost/proxy files, CareerForge source files being edited, compose configuration, and the current landing document root. Build and validate new artifacts before switching traffic.
+CareerForge-AI 项目的 `livePath` 设置为 `/career/`。展开项目详情后，右侧操作区同时显示：
 
-Deployment order:
+- “前往体验”：在当前网站中进入 `/career/`。
+- “查看源码”：继续前往现有源码仓库。
 
-1. Update and test CareerForge path behavior.
-2. Build a new CareerForge frontend image without touching persistent services.
-3. Build and stage the personal landing page.
-4. Install and syntax-check the OpenResty path routing.
-5. Switch traffic and run public smoke tests.
+多智能体客服和中医 RAG 尚未部署，暂时继续显示未提供部署地址，不添加无效的体验链接。
 
-If validation fails, restore the prior proxy file and CareerForge frontend image/config, reload OpenResty, and verify the original root deployment. Database containers and volumes are never recreated during rollback.
+## 六、发布与回滚
 
-## Verification
+修改前创建带时间标记的备份，备份范围包括：
 
-Required checks:
+- 1Panel 网站和代理配置。
+- CareerForge 本次需要修改的源码及容器编排配置。
+- 当前 CareerForge 前端镜像信息。
+- 个人主页服务器目录。
 
-- Landing-page unit tests and production build pass.
-- CareerForge frontend build and lint pass.
-- OpenResty and inner Nginx configuration tests pass.
-- `/` renders the personal landing page and refreshes correctly.
-- `/career` redirects to `/career/`.
-- `/career/`, `/career/auth`, `/career/student`, and `/career/admin` load without asset 404s.
-- Login/refresh, authenticated API requests, file upload/download, SSE streaming, generated images/static files, and PDF export work through `/career/`.
-- The landing-page `前往体验` action reaches `/career/`; the source action remains intact.
-- HTTP redirects to HTTPS, Cloudflare access remains healthy, and port `8080` is no longer publicly bound.
-- A mobile-width browser smoke test confirms both sites remain usable.
+发布顺序：
 
-## Out of scope
+1. 调整并测试 CareerForge 的路径行为。
+2. 构建新的 CareerForge 前端镜像，不重建持久化服务。
+3. 构建并暂存个人介绍网站。
+4. 安装新的 OpenResty 路由配置并检查语法。
+5. 切换公网流量并执行完整验收。
 
-- Deploying the multi-agent customer-service project.
-- Deploying the Chinese-medicine RAG project.
-- Changing CareerForge business behavior, database contents, prompts, or model credentials.
+如果验证失败，立即恢复原代理配置、原 CareerForge 前端镜像和相关配置，然后重新加载 OpenResty。数据库容器和数据卷在发布及回滚过程中都不会被重建。
+
+## 七、验收标准
+
+以下项目必须全部通过：
+
+- 个人主页自动化测试和正式构建成功。
+- CareerForge 前端构建及代码检查成功。
+- OpenResty 与 CareerForge 容器内 Nginx 配置检查成功。
+- `/` 正确显示个人介绍网站，刷新页面正常。
+- `/career` 自动跳转到 `/career/`。
+- `/career/`、`/career/auth`、`/career/student` 和 `/career/admin` 均能加载，脚本、样式和图片没有 404。
+- 登录与续期、需要登录的服务请求、文件上传下载、SSE 流式输出、生成图片、静态文件和 PDF 导出均能通过 `/career/` 正常工作。
+- 个人主页的“前往体验”能进入 `/career/`，“查看源码”继续有效。
+- HTTP 自动跳转到 HTTPS，Cloudflare 访问正常，`8080` 不再直接向公网开放。
+- 使用移动端宽度检查个人主页和 CareerForge 的基本可用性。
+
+## 八、本次不包含的工作
+
+- 部署多智能体客服项目。
+- 部署中医 RAG 项目。
+- 修改 CareerForge 的业务功能、数据库内容、提示词或模型密钥。
