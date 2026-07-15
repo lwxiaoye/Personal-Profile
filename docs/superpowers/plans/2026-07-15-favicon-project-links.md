@@ -200,7 +200,7 @@ git show --stat --oneline 456c875 -- src/portfolio-data.js src/App.jsx
 - Verify: `dist/favicon-32.png`
 - Verify: `dist/favicon-16.png`
 
-- [ ] **Step 1: Build from a clean production output**
+- [x] **Step 1: Build from a clean production output**
 
 ```powershell
 Remove-Item -Recurse -Force -LiteralPath (Resolve-Path dist)
@@ -209,7 +209,7 @@ Remove-Item -Recurse -Force -LiteralPath (Resolve-Path dist)
 
 Expected: build exits with code 0 and recreates `dist` inside the worktree.
 
-- [ ] **Step 2: Run the local preview**
+- [x] **Step 2: Run the local preview**
 
 ```powershell
 & 'C:\Users\31898\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' node_modules/vite/bin/vite.js preview --host 127.0.0.1
@@ -217,7 +217,7 @@ Expected: build exits with code 0 and recreates `dist` inside the worktree.
 
 Expected: preview serves the built site locally.
 
-- [ ] **Step 3: Verify in the browser**
+- [x] **Step 3: Verify in the browser**
 
 Open the preview and confirm:
 
@@ -227,7 +227,7 @@ Open the preview and confirm:
 - Medical shows both actions and both point to `https://github.com/lwxiaoye/medical-RAG-`.
 - The expanded cards remain aligned at desktop and 390px mobile widths.
 
-- [ ] **Step 4: Check the final diff**
+- [x] **Step 4: Check the final diff**
 
 ```powershell
 git diff --check
@@ -242,11 +242,11 @@ Expected: no whitespace errors and no unexplained files.
 - Deploy: local `dist/` to server landing-page document root
 - Publish: branch `codex/path-deployment`
 
-- [ ] **Step 1: Back up and atomically replace the landing build**
+- [x] **Step 1: Back up and atomically replace the landing build**
 
 Copy `dist` to a timestamped server staging directory, back up the current landing document root, then rename the staging directory into `/opt/1panel/www/sites/lwxiaoye.top/index` without modifying `/career/` services.
 
-- [ ] **Step 2: Smoke-test public endpoints**
+- [x] **Step 2: Smoke-test public endpoints**
 
 Verify:
 
