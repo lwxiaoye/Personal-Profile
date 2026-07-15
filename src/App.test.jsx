@@ -277,34 +277,61 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
   });
 
-  it("routes project experience and source actions to their configured destinations", async () => {
-    const user = userEvent.setup();
-    render(<App />);
+  describe("routes project experience and source actions to their configured destinations", () => {
+    it("routes CareerForge experience internally and source externally", async () => {
+      const user = userEvent.setup();
+      render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
-    const careerExperience = screen.getByRole("link", { name: "前往体验 CareerForge-AI" });
-    expect(careerExperience).toHaveAttribute("href", "/career/");
-    expect(careerExperience).not.toHaveAttribute("target");
+      await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
 
-    await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
-    const serviceExperience = screen.getByRole("link", { name: "前往体验 多智能体客服" });
-    const serviceSource = screen.getByRole("link", { name: "查看 多智能体客服 源码" });
+      const experience = screen.getByRole("link", { name: "前往体验 CareerForge-AI" });
+      expect(experience).toHaveAttribute("href", "/career/");
+      expect(experience).not.toHaveAttribute("target");
 
-    for (const action of [serviceExperience, serviceSource]) {
-      expect(action).toHaveAttribute("href", "https://github.com/lwxiaoye/Agent-");
+      const source = screen.getByRole("link", { name: "查看 CareerForge-AI 源码" });
+      expect(source).toHaveAttribute("href", "https://github.com/Dloading666/CareerForge-AI");
+      expect(source).toHaveAttribute("target", "_blank");
+      expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+    });
+
+    it.each([
+      {
+        project: "多智能体客服",
+        action: "前往体验",
+        accessibleName: "前往体验 多智能体客服",
+        href: "https://github.com/lwxiaoye/Agent-",
+      },
+      {
+        project: "多智能体客服",
+        action: "查看源码",
+        accessibleName: "查看 多智能体客服 源码",
+        href: "https://github.com/lwxiaoye/Agent-",
+      },
+      {
+        project: "医疗 RAG",
+        action: "前往体验",
+        accessibleName: "前往体验 医疗 RAG",
+        href: "https://github.com/lwxiaoye/medical-RAG-",
+      },
+      {
+        project: "医疗 RAG",
+        action: "查看源码",
+        accessibleName: "查看 医疗 RAG 源码",
+        href: "https://github.com/lwxiaoye/medical-RAG-",
+      },
+    ])("routes $project $action to its configured external destination", async (testCase) => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await user.click(
+        screen.getByRole("button", { name: `展开 ${testCase.project} 项目详情` }),
+      );
+
+      const action = screen.getByRole("link", { name: testCase.accessibleName });
+      expect(action).toHaveAttribute("href", testCase.href);
       expect(action).toHaveAttribute("target", "_blank");
-      expect(action).toHaveAttribute("rel", "noreferrer");
-    }
-
-    await user.click(screen.getByRole("button", { name: "展开 医疗 RAG 项目详情" }));
-    const medicalExperience = screen.getByRole("link", { name: "前往体验 医疗 RAG" });
-    const medicalSource = screen.getByRole("link", { name: "查看 医疗 RAG 源码" });
-
-    for (const action of [medicalExperience, medicalSource]) {
-      expect(action).toHaveAttribute("href", "https://github.com/lwxiaoye/medical-RAG-");
-      expect(action).toHaveAttribute("target", "_blank");
-      expect(action).toHaveAttribute("rel", "noreferrer");
-    }
+      expect((action.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+    });
   });
 
   it("tracks the insight mask directly inside the left hero area", () => {
