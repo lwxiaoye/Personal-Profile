@@ -10,18 +10,20 @@
 
 ---
 
+> **Implementation deviation / final selection:** The user-selected three-orbit attachment overrides the original favicon proposal. The selected asset and its 32×32 and 16×16 reductions were committed in `8143378e07cf545ca77841e5c4890c720bf10a50`. The canonical source for all reproduction and verification is now `public/agent-orbit-favicon-master.png`; no temporary attachment path is required.
+
 ### Task 1: Adopt and prepare the selected Agent-orbit favicon
 
 **Files:**
-- Create: `public/agent-orbit-favicon-master.png`
-- Create: `public/favicon-32.png`
-- Create: `public/favicon-16.png`
+- Final source: `public/agent-orbit-favicon-master.png`
+- Generated: `public/favicon-32.png`
+- Generated: `public/favicon-16.png`
 
-- [ ] **Step 1: Adopt the user-selected master icon**
+- [x] **Step 1: Adopt the user-selected master icon**
 
-Use the image explicitly selected by the user as the source of truth. It must retain the warm-white background, centered black precision core, three black orbital paths, exactly one small circular warm-red `#e54e37` signal, and no text. Save that supplied image as `public/agent-orbit-favicon-master.png` without regenerating it or replacing unrelated assets, and preserve a silhouette that remains recognizable at 16×16 pixels.
+Use `public/agent-orbit-favicon-master.png`, the repository copy of the image explicitly selected by the user, as the source of truth. It retains the warm-white background, centered black precision core, three black orbital paths, exactly one small circular warm-red `#e54e37` signal, and no text. Do not regenerate it or replace unrelated assets, and preserve a silhouette that remains recognizable at 16×16 pixels.
 
-- [ ] **Step 2: Derive browser-sized files**
+- [x] **Step 2: Derive browser-sized files**
 
 Use the bundled Python runtime and Pillow with LANCZOS resampling to produce exact 32×32 and 16×16 RGBA PNGs from the square master:
 
@@ -43,15 +45,14 @@ for size in (32, 16):
 
 Expected: `favicon-32.png` is 32×32 and `favicon-16.png` is 16×16.
 
-- [ ] **Step 3: Visually inspect all three assets**
+- [x] **Step 3: Visually inspect all three assets**
 
 Open the master and both reductions. Confirm the icon matches the user-selected three-orbit source: one `#e54e37` warm-red signal, a centered black core, three readable black orbit lines, and no unintended text or extra decoration. Confirm the 16×16 reduction remains legible.
 
-- [ ] **Step 4: Commit the icon assets**
+- [x] **Step 4: Commit the icon assets**
 
 ```powershell
-git add public/agent-orbit-favicon-master.png public/favicon-32.png public/favicon-16.png
-git commit -m "feat: add Agent orbit favicon assets"
+git show --stat --oneline 8143378e07cf545ca77841e5c4890c720bf10a50 -- public/agent-orbit-favicon-master.png public/favicon-32.png public/favicon-16.png
 ```
 
 ### Task 2: Declare the new favicons
