@@ -277,21 +277,34 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
   });
 
-  it("only exposes the deployed CareerForge experience", async () => {
+  it("routes project experience and source actions to their configured destinations", async () => {
     const user = userEvent.setup();
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
-    expect(screen.getByRole("link", { name: "前往体验 CareerForge-AI" })).toHaveAttribute(
-      "href",
-      "/career/",
-    );
+    const careerExperience = screen.getByRole("link", { name: "前往体验 CareerForge-AI" });
+    expect(careerExperience).toHaveAttribute("href", "/career/");
+    expect(careerExperience).not.toHaveAttribute("target");
 
     await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
-    expect(screen.queryByRole("link", { name: "前往体验 多智能体客服" })).not.toBeInTheDocument();
+    const serviceExperience = screen.getByRole("link", { name: "前往体验 多智能体客服" });
+    const serviceSource = screen.getByRole("link", { name: "查看 多智能体客服 源码" });
+
+    for (const action of [serviceExperience, serviceSource]) {
+      expect(action).toHaveAttribute("href", "https://github.com/lwxiaoye/Agent-");
+      expect(action).toHaveAttribute("target", "_blank");
+      expect(action).toHaveAttribute("rel", "noreferrer");
+    }
 
     await user.click(screen.getByRole("button", { name: "展开 医疗 RAG 项目详情" }));
-    expect(screen.queryByRole("link", { name: "前往体验 医疗 RAG" })).not.toBeInTheDocument();
+    const medicalExperience = screen.getByRole("link", { name: "前往体验 医疗 RAG" });
+    const medicalSource = screen.getByRole("link", { name: "查看 医疗 RAG 源码" });
+
+    for (const action of [medicalExperience, medicalSource]) {
+      expect(action).toHaveAttribute("href", "https://github.com/lwxiaoye/medical-RAG-");
+      expect(action).toHaveAttribute("target", "_blank");
+      expect(action).toHaveAttribute("rel", "noreferrer");
+    }
   });
 
   it("tracks the insight mask directly inside the left hero area", () => {
