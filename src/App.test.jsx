@@ -277,15 +277,21 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
   });
 
-  it("does not expose fake live links before deployment paths are supplied", async () => {
+  it("only exposes the deployed CareerForge experience", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const trigger = screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" });
-    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
+    expect(screen.getByRole("link", { name: "前往体验 CareerForge-AI" })).toHaveAttribute(
+      "href",
+      "/career/",
+    );
 
-    expect(within(trigger.closest("article")).getByText("部署地址待提供")).toBeVisible();
-    expect(screen.queryByRole("link", { name: /在线体验 CareerForge-AI/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
+    expect(screen.queryByRole("link", { name: "前往体验 多智能体客服" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "展开 医疗 RAG 项目详情" }));
+    expect(screen.queryByRole("link", { name: "前往体验 医疗 RAG" })).not.toBeInTheDocument();
   });
 
   it("tracks the insight mask directly inside the left hero area", () => {

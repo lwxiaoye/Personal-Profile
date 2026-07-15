@@ -104,7 +104,7 @@ export const projects = [
     contribution:
       "能独立接住一条 AI 功能链路，从需求、架构和 Prompt，一直做到接口、前端反馈与异常处理。",
     stack: "React / TypeScript / FastAPI / MySQL / Redis / SSE",
-    livePath: null,
+    livePath: "/career/",
     sourceHref: "https://github.com/Dloading666/CareerForge-AI",
   },
   {

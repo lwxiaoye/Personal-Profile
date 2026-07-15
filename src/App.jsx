@@ -362,8 +362,8 @@ function ProjectRow({ project, open, onToggle }) {
           <small>{project.stack}</small>
           <div className="project-links">
             {project.livePath ? (
-              <a href={project.livePath} aria-label={`在线体验 ${project.title}`}>
-                在线体验 <ArrowUpRight weight="bold" />
+              <a href={project.livePath} aria-label={`前往体验 ${project.title}`}>
+                前往体验 <ArrowUpRight weight="bold" />
               </a>
             ) : (
               <span className="link-unavailable">部署地址待提供</span>
