@@ -123,8 +123,8 @@ export const projects = [
     contribution:
       "能设计可读、可调试、可增量扩展的 Agent 工作流，并处理真实生产边界。",
     stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
-    livePath: null,
-    sourceHref: null,
+    livePath: "https://github.com/lwxiaoye/Agent-",
+    sourceHref: "https://github.com/lwxiaoye/Agent-",
   },
   {
     id: "medical",
@@ -141,8 +141,8 @@ export const projects = [
     ],
     contribution: "能把检索、评测、回退和业务接口组成完整闭环。",
     stack: "FastAPI / LangGraph / Milvus / BM25 / PostgreSQL / Docker",
-    livePath: null,
-    sourceHref: null,
+    livePath: "https://github.com/lwxiaoye/medical-RAG-",
+    sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
   },
 ];
 

@@ -331,6 +331,8 @@ function AgentMap({ activeStage, onStageChange }) {
 }
 
 function ProjectRow({ project, open, onToggle }) {
+  const livePathIsExternal = /^https?:\/\//.test(project.livePath ?? "");
+
   return (
     <article className={`project-row ${open ? "is-open" : ""}`}>
       <button
@@ -362,7 +364,12 @@ function ProjectRow({ project, open, onToggle }) {
           <small>{project.stack}</small>
           <div className="project-links">
             {project.livePath ? (
-              <a href={project.livePath} aria-label={`前往体验 ${project.title}`}>
+              <a
+                href={project.livePath}
+                target={livePathIsExternal ? "_blank" : undefined}
+                rel={livePathIsExternal ? "noreferrer" : undefined}
+                aria-label={`前往体验 ${project.title}`}
+              >
                 前往体验 <ArrowUpRight weight="bold" />
               </a>
             ) : (
