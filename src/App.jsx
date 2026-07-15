@@ -4,6 +4,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
+  ChatCircleDots,
   CopySimple,
   DownloadSimple,
   EnvelopeSimple,
@@ -18,8 +19,10 @@ import {
   availabilityFacts,
   capabilities,
   experienceProjects,
-  insights,
+  planetThemes,
   projects,
+  runtimeMapAux,
+  runtimeSegments,
   stages,
 } from "./portfolio-data.js";
 
@@ -48,110 +51,66 @@ async function copyText(text) {
   if (!copied) throw new Error("Clipboard copy failed");
 }
 
-function AgentCanvas({ activeStage }) {
-  const canvasRef = useRef(null);
+function PlanetTexture({ stage }) {
+  const clipPath = `url(#planet-${stage.id}-clip)`;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return undefined;
-
-    let ctx;
-    try {
-      ctx = canvas.getContext("2d");
-    } catch {
-      return undefined;
-    }
-    if (!ctx) return undefined;
-
-    let frame = 0;
-    let raf = 0;
-    const draw = () => {
-      const rect = canvas.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
-      const width = Math.max(rect.width, 1);
-      const height = Math.max(rect.height, 1);
-      if (canvas.width !== Math.round(width * ratio)) {
-        canvas.width = Math.round(width * ratio);
-        canvas.height = Math.round(height * ratio);
-      }
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      ctx.clearRect(0, 0, width, height);
-
-      const cx = width / 2;
-      const cy = height / 2 + 8;
-      const scale = Math.min(width, height) / 2.35;
-      const activeIndex = stages.findIndex((stage) => stage.id === activeStage);
-      frame += 0.006;
-
-      const drawFlow = (x1, y1, x2, y2, index, color, lineWidth, offsetY = 0) => {
-        ctx.setLineDash([]);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = lineWidth;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1 + offsetY);
-        ctx.quadraticCurveTo(
-          cx + Math.sin(index) * 32,
-          cy + Math.cos(index) * 24 + offsetY,
-          x2,
-          y2 + offsetY,
-        );
-        ctx.stroke();
-      };
-
-      stages.forEach((stage, index) => {
-        const next = stages[(index + 1) % stages.length];
-        const x1 = (stage.x / 100) * width;
-        const y1 = (stage.y / 100) * height;
-        const x2 = (next.x / 100) * width;
-        const y2 = (next.y / 100) * height;
-        drawFlow(x1, y1, x2, y2, index, "rgba(20,20,18,.06)", 1.2, 8);
-        drawFlow(
-          x1,
-          y1,
-          x2,
-          y2,
-          index,
-          index === activeIndex ? "rgba(20,20,18,.68)" : "rgba(20,20,18,.18)",
-          index === activeIndex ? 1.2 : 0.8,
-        );
-      });
-
-      const start = stages[Math.max(activeIndex, 0)];
-      const end = stages[(Math.max(activeIndex, 0) + 1) % stages.length];
-      const progress = (Math.sin(frame * 4) + 1) / 2;
-      const sx = (start.x / 100) * width;
-      const sy = (start.y / 100) * height;
-      const ex = (end.x / 100) * width;
-      const ey = (end.y / 100) * height;
-      const px = sx + (ex - sx) * progress;
-      const py = sy + (ey - sy) * progress - Math.sin(progress * Math.PI) * 30;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = ORBIT_SIGNAL_COLOR;
-      ctx.fillStyle = ORBIT_SIGNAL_COLOR;
-      ctx.beginPath();
-      ctx.arc(px, py, 4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      ctx.strokeStyle = "rgba(20,20,18,.18)";
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.arc(cx, cy, scale * 0.17, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx, cy, scale * 0.12, 0, Math.PI * 2);
-      ctx.stroke();
-
-      raf = window.requestAnimationFrame(draw);
-    };
-    draw();
-    return () => window.cancelAnimationFrame(raf);
-  }, [activeStage]);
-
-  return <canvas ref={canvasRef} className="agent-canvas" aria-hidden="true" />;
+  return (
+    <g className="planet-surface" aria-hidden="true">
+      <circle className="planet-halo" r="27" />
+      {stage.planet === "saturn" && <ellipse className="saturn-ring" rx="31" ry="9" transform="rotate(-18)" />}
+      <g className="planet-texture-spin">
+        <circle className="planet-body" r="21" fill={`url(#planet-${stage.planet}-gradient)`} />
+        <g clipPath={clipPath}>
+          {stage.planet === "mercury" && (
+            <g className="planet-craters">
+              <circle cx="-7" cy="-5" r="3.2" /><circle cx="7" cy="5" r="2.2" /><circle cx="4" cy="-10" r="1.5" />
+            </g>
+          )}
+          {stage.planet === "venus" && (
+            <g className="planet-clouds">
+              <path d="M -24 -7 C -10 -13 6 -10 24 -5" /><path d="M -22 5 C -7 -1 8 1 24 8" />
+            </g>
+          )}
+          {stage.planet === "earth" && (
+            <g className="planet-continents">
+              <path d="M -16 -7 C -10 -14 0 -12 3 -6 C 7 -2 3 2 -3 2 C -8 5 -14 1 -16 -7 Z" />
+              <path d="M 5 5 C 11 1 17 5 16 11 C 12 15 6 13 5 5 Z" />
+            </g>
+          )}
+          {stage.planet === "mars" && (
+            <g className="planet-minerals">
+              <path d="M -18 7 C -8 1 2 3 18 -4" /><circle cx="8" cy="-8" r="2.4" /><circle cx="-9" cy="-5" r="1.6" />
+            </g>
+          )}
+          {stage.planet === "jupiter" && (
+            <g className="planet-bands">
+              <path d="M -24 -10 C -8 -6 8 -13 24 -8" /><path d="M -24 -2 C -6 3 8 -4 24 1" />
+              <path d="M -24 7 C -8 11 8 5 24 9" /><ellipse cx="8" cy="5" rx="4" ry="2.2" />
+            </g>
+          )}
+          {stage.planet === "saturn" && <path className="planet-latitude" d="M -20 4 C -7 8 8 7 20 2" />}
+        </g>
+        <ellipse className="planet-specular" cx="-7" cy="-9" rx="7" ry="4" />
+      </g>
+    </g>
+  );
 }
 
 function AgentMap({ activeStage, onStageChange }) {
+  const nodes = Object.fromEntries(stages.map((stage) => [stage.id, stage]));
+  const segmentPath = ({ from, to, controls }) => {
+    const start = nodes[from];
+    const end = nodes[to];
+    return `M ${start.x} ${start.y} C ${controls.join(" ")} ${end.x} ${end.y}`;
+  };
+  const activateStage = (event, stageId) => {
+    if (event.type === "keydown" && event.key !== "Enter" && event.key !== " ") return;
+    if (event.type === "keydown") event.preventDefault();
+    onStageChange(stageId);
+  };
+  const verify = nodes.verify;
+  const plan = nodes.plan;
+  const { output, context, rag, core } = runtimeMapAux;
   return (
     <div
       className="agent-map"
@@ -160,41 +119,212 @@ function AgentMap({ activeStage, onStageChange }) {
     >
       <div className="map-header">
         <div>
-          <span className="eyebrow">LIVE SYSTEM</span>
+          <span className="eyebrow">AGENT RUNTIME MAP</span>
           <h2>Agent 运行星图</h2>
         </div>
-        <span className="map-status"><i />任务执行中</span>
+        <span className="map-status">EXECUTION LOOP</span>
       </div>
       <div className="map-stage">
-        <AgentCanvas activeStage={activeStage} />
-        <div className="orbit-space" aria-hidden="true">
-          <span className="orbit-plane orbit-plane-a" />
-          <span className="orbit-plane orbit-plane-b" />
-          <span className="orbit-plane orbit-plane-c" />
-        </div>
-        <div className="task-core">
-          <span>TASK CORE</span>
-          <strong>任务核心</strong>
-        </div>
-        {stages.map((stage, index) => (
-          <button
-            type="button"
-            key={stage.id}
-            className={`stage-node stage-${stage.id}`}
-            aria-label={`${stage.name} ${stage.detail}`}
-            aria-pressed={activeStage === stage.id}
-            onClick={() => onStageChange(stage.id)}
-            onMouseEnter={() => onStageChange(stage.id)}
-          >
-            <span className="node-dot" style={{ "--node-color": stage.color }}>{index + 1}</span>
-            <span className="node-copy"><strong>{stage.name}</strong><small>{stage.detail}</small></span>
-          </button>
-        ))}
+        <svg
+          className="runtime-map-svg"
+          viewBox="0 0 1000 590"
+          role="img"
+          aria-label="Agent 执行循环：Intent、Plan、Decide、Tools、Observe、Verify，并连接 Output、RAG 与 Harness"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <defs>
+            <marker id="arrow-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+            <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+            <linearGradient id="metal-edge" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#FFFDF6" />
+              <stop offset="0.42" stopColor="#D8BE83" />
+              <stop offset="0.72" stopColor="#8D816C" />
+              <stop offset="1" stopColor="#575048" />
+            </linearGradient>
+            <radialGradient id="ceramic-core" cx="34%" cy="27%" r="78%">
+              <stop offset="0" stopColor="#FFFDF6" />
+              <stop offset="0.5" stopColor="#F5EEDC" />
+              <stop offset="0.8" stopColor="#D8BE83" />
+              <stop offset="1" stopColor="#8D816C" />
+            </radialGradient>
+            <linearGradient id="rag-context-path" x1="920" y1="470" x2="900" y2="94" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor={planetThemes.uranus.base} />
+              <stop offset="1" stopColor={planetThemes.neptune.base} />
+            </linearGradient>
+            <filter id="core-shadow" x="-40%" y="-40%" width="180%" height="200%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#121210" floodOpacity="0.13" />
+            </filter>
+            <filter id="node-shadow" x="-60%" y="-60%" width="220%" height="240%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#121210" floodOpacity="0.16" />
+            </filter>
+            {stages.map((stage) => {
+              const theme = planetThemes[stage.planet];
+              return (
+                <radialGradient key={stage.planet} className="planet-gradient" id={`planet-${stage.planet}-gradient`} cx="32%" cy="25%" r="78%">
+                  <stop offset="0" stopColor={theme.highlight} />
+                  <stop offset="0.42" stopColor={theme.base} />
+                  <stop offset="0.72" stopColor={theme.mid} />
+                  <stop offset="1" stopColor={theme.shadow} />
+                </radialGradient>
+              );
+            })}
+            {stages.map((stage) => (
+              <clipPath key={stage.id} id={`planet-${stage.id}-clip`}>
+                <circle className="planet-clip" r="21" />
+              </clipPath>
+            ))}
+            {(["uranus", "neptune"]).map((planet) => {
+              const theme = planetThemes[planet];
+              return (
+                <radialGradient key={planet} id={`${planet}-gradient`} cx="32%" cy="25%" r="78%">
+                  <stop offset="0" stopColor={theme.highlight} />
+                  <stop offset="0.5" stopColor={theme.base} />
+                  <stop offset="1" stopColor={theme.shadow} />
+                </radialGradient>
+              );
+            })}
+          </defs>
+
+          <g className="harness-motion-main" aria-hidden="true">
+            <ellipse className="harness-orbit harness-orbit-main" cx="500" cy="295" rx="455" ry="252" />
+          </g>
+          <g className="harness-motion-vertical" aria-hidden="true">
+            <ellipse className="harness-orbit harness-orbit-vertical" cx="500" cy="295" rx="143" ry="248" />
+          </g>
+          <g className="harness-motion-context" aria-hidden="true">
+            <ellipse className="context-orbit" cx="500" cy="300" rx="385" ry="138" transform="rotate(14 500 300)" />
+          </g>
+
+          <g className="runtime-paths" fill="none">
+            {runtimeSegments.map((segment) => {
+              const active = segment.from === activeStage;
+              return (
+                <path
+                  key={`${segment.from}-${segment.to}`}
+                  id={active ? "active-runtime-signal-path" : undefined}
+                  className={`runtime-segment ${active ? "is-active" : ""}`}
+                  data-from={segment.from}
+                  data-to={segment.to}
+                  d={segmentPath(segment)}
+                  markerEnd={active ? "url(#arrow-red)" : "url(#arrow-dark)"}
+                />
+              );
+            })}
+            <path
+              id={activeStage === "verify" ? "active-runtime-signal-path" : undefined}
+              className={`runtime-output-path ${activeStage === "verify" ? "is-active" : ""}`}
+              data-branch="output"
+              d={`M ${verify.x} ${verify.y} C 108 255 80 220 ${output.x} ${output.y}`}
+              markerEnd="url(#arrow-dark)"
+            />
+            <path
+              className="runtime-return-path"
+              data-branch="retry"
+              d={`M ${verify.x} ${verify.y} C 150 86 500 50 ${plan.x} ${plan.y}`}
+              markerEnd="url(#arrow-dark)"
+            />
+            <path
+              className="context-link rag-context-link"
+              data-context-edge="rag-context"
+              d={`M ${rag.x} ${rag.y} C 938 330 930 188 ${context.x} ${context.y}`}
+              markerEnd="url(#arrow-blue)"
+            />
+            <path
+              className="context-link context-plan-link"
+              data-context-edge="context-plan"
+              d={`M ${context.x} ${context.y} C 842 108 780 130 ${plan.x} ${plan.y}`}
+              markerEnd="url(#arrow-blue)"
+            />
+          </g>
+
+          <circle key={activeStage} className="execution-signal" r="4.5" aria-hidden="true">
+            <animateMotion dur="2.4s" repeatCount="indefinite" calcMode="linear">
+              <mpath href="#active-runtime-signal-path" />
+            </animateMotion>
+          </circle>
+
+          <g className="runtime-task-core" transform={`translate(${core.x} ${core.y})`} filter="url(#core-shadow)" aria-hidden="true">
+            <g className="runtime-task-core-float">
+              <circle className="task-core-halo" r="86" />
+              <circle className="task-core-metal" r="73" />
+              <circle className="task-core-shell" r="67" />
+              <circle className="task-core-ceramic" r="61" />
+              <g className="task-core-etched-layer">
+                <circle className="task-core-etched" r="48" />
+                <path className="task-core-arc" d="M -36 30 A 47 47 0 0 0 39 24" />
+              </g>
+              <ellipse className="task-core-highlight" cx="-22" cy="-27" rx="26" ry="13" />
+              <text className="task-core-en" x="0" y="-9" textAnchor="middle">TASK CORE</text>
+              <text className="task-core-cn" x="0" y="17" textAnchor="middle">任务核心</text>
+            </g>
+          </g>
+
+          <g className="output-endpoint">
+            <circle cx={output.x} cy={output.y} r="3.5" />
+            <text className="map-label-en" x={output.labelX} y={output.labelY}>OUTPUT</text>
+            <text className="map-label-cn" x={output.labelX} y={output.labelY + 20}>结果交付</text>
+          </g>
+
+          <g className="context-input">
+            <circle className="context-node-planet" cx={context.x} cy={context.y} r="5" fill="url(#neptune-gradient)" />
+            <text className="map-label-en" x={context.labelX} y={context.labelY} textAnchor="middle">CONTEXT INPUT</text>
+          </g>
+
+          <g className="rag-memory">
+            <g transform={`translate(${rag.x} ${rag.y})`}>
+              <g className="rag-node-motion">
+                <circle className="rag-node-planet" r="19" fill="url(#uranus-gradient)" />
+                <path className="rag-node-band" d="M -17 2 C -6 -2 7 -2 17 1" />
+                <circle className="rag-node-highlight" cx="-5" cy="-6" r="6" />
+              </g>
+            </g>
+            <text className="map-label-en" x={rag.labelX} y={rag.labelY} textAnchor="end">RAG / MEMORY</text>
+            <text className="map-label-cn" x={rag.labelX} y={rag.labelY + 20} textAnchor="end">知识与上下文</text>
+          </g>
+
+          <text className="return-path-label" x="215" y="108">未通过 / RETURN TO PLAN</text>
+          <text className="harness-copy" x="42" y="555">HARNESS · CONTEXT · STATE · PERMISSIONS · TOOL REGISTRY · TRACE · EVALUATION</text>
+
+          {stages.map((stage) => (
+            <g
+              key={stage.id}
+              className={`runtime-stage-node ${activeStage === stage.id ? "is-active" : ""}`}
+              data-node-id={stage.id}
+              data-planet={stage.planet}
+              transform={`translate(${stage.x} ${stage.y})`}
+              role="button"
+              tabIndex="0"
+              aria-label={`${stage.name} ${stage.detail}`}
+              aria-pressed={activeStage === stage.id}
+              style={{ "--planet-shadow": planetThemes[stage.planet].shadow, "--planet-glow": planetThemes[stage.planet].glow }}
+              onClick={(event) => activateStage(event, stage.id)}
+              onKeyDown={(event) => activateStage(event, stage.id)}
+            >
+              <circle className="runtime-node-hit" cx="0" cy="0" r="30" />
+              <PlanetTexture stage={stage} />
+              <circle className="runtime-node-circle" cx="0" cy="0" r="21" filter="url(#node-shadow)" />
+              <text className="runtime-node-index" x="0" y="4" textAnchor="middle">{stage.index}</text>
+              <text className="runtime-node-name" x={stage.labelX - stage.x} y={stage.labelY - stage.y} textAnchor={stage.anchor}>{stage.name}</text>
+              <text className="runtime-node-detail" x={stage.labelX - stage.x} y={stage.labelY - stage.y + 20} textAnchor={stage.anchor}>{stage.detail}</text>
+            </g>
+          ))}
+        </svg>
+        <p className="sr-only runtime-map-text">Intent 进入 Plan，Plan 进入 Decide，Decide 调用 Tools，Tools 的结果进入 Observe，Observe 进入 Verify。Verify 通过后输出结果，未通过则返回 Plan。RAG / Memory 通过 Context Input 为 Plan 提供知识与上下文；Harness 提供状态、权限、工具注册、追踪与评测。</p>
       </div>
       <div className="map-footer">
-        <span>STATE {String(stages.findIndex((stage) => stage.id === activeStage)).padStart(2, "0")}</span>
-        <span>实时连接</span>
-        <span>结果可验证</span>
+        <span>STATEFUL EXECUTION</span>
+        <span>LIVE TRACE</span>
+        <span>EVALUATION</span>
       </div>
     </div>
   );
@@ -255,7 +385,11 @@ function ProjectRow({ project, open, onToggle }) {
   );
 }
 
-function CapabilityRow({ capability, open, onToggle }) {
+function CapabilityRow({ capability, open, onToggle, onOpenProject }) {
+  const evidenceProjects = capability.projectIds
+    .map((projectId) => projects.find((project) => project.id === projectId))
+    .filter(Boolean);
+
   return (
     <article className={`capability-row ${open ? "is-open" : ""}`}>
       <button
@@ -267,21 +401,35 @@ function CapabilityRow({ capability, open, onToggle }) {
       >
         <span className="capability-code">{capability.index} / {capability.eyebrow}</span>
         <span className="capability-title">{capability.title}</span>
+        <span className="capability-summary">{capability.summary}</span>
         <span className="capability-stack">{capability.stack}</span>
         <span className="capability-toggle" aria-hidden="true">{open ? <Minus /> : <Plus />}</span>
       </button>
       <div className="capability-detail" hidden={!open}>
         <div>
-          <span>APPROACH</span>
+          <span>工程问题</span>
           <p>{capability.description}</p>
         </div>
         <div>
-          <span>METHODS</span>
+          <span>关键实现</span>
           <ul>{capability.methods.map((method) => <li key={method}>{method}</li>)}</ul>
         </div>
         <div>
-          <span>PROOF</span>
+          <span>项目证据</span>
           <strong>{capability.proof}</strong>
+          <div className="capability-project-links">
+            {evidenceProjects.map((project) => (
+              <button
+                type="button"
+                className="capability-project-link"
+                key={project.id}
+                aria-label={`查看项目：${project.title}`}
+                onClick={() => onOpenProject(project.id)}
+              >
+                查看项目 <ArrowRight weight="bold" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </article>
@@ -289,9 +437,9 @@ function CapabilityRow({ capability, open, onToggle }) {
 }
 
 export function App() {
-  const [activeStage, setActiveStage] = useState("intent");
+  const [activeStage, setActiveStage] = useState("plan");
   const [openProject, setOpenProject] = useState("");
-  const [openCapability, setOpenCapability] = useState("");
+  const [openCapability, setOpenCapability] = useState("orchestration");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const heroCopyRef = useRef(null);
@@ -310,21 +458,18 @@ export function App() {
   };
   const updateMaskPosition = (x, y) => {
     const mask = insightMaskRef.current;
-    if (!mask) return;
-    mask.style.setProperty("--mask-x", `${x}%`);
-    mask.style.setProperty("--mask-y", `${y}%`);
+    mask?.style.setProperty("--mask-x", `${x}px`);
+    mask?.style.setProperty("--mask-y", `${y}px`);
   };
   const setMaskVisible = (visible) => {
     insightMaskRef.current?.setAttribute("aria-hidden", visible ? "false" : "true");
   };
   const handlePointerMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
-    const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
+    const { clientX, clientY } = event;
     window.cancelAnimationFrame(maskFrameRef.current);
     maskFrameRef.current = window.requestAnimationFrame(() => {
-      updateMaskPosition(x, y);
-      setMaskVisible(true);
+      updateMaskPosition(clientX, clientY);
+      setMaskVisible(window.scrollY <= 1);
     });
   };
   const handlePointerLeave = () => {
@@ -345,6 +490,10 @@ export function App() {
       setEmailCopied(false);
     }
   };
+  const handleOpenEvidenceProject = (projectId) => {
+    setOpenProject(projectId);
+    scrollToSection("projects");
+  };
 
   useEffect(() => {
     const hideOutsideHero = (event) => {
@@ -362,6 +511,33 @@ export function App() {
       window.clearTimeout(emailResetRef.current);
       window.removeEventListener("pointermove", hideOutsideHero);
     };
+  }, []);
+
+  useEffect(() => {
+    const hideMaskOnScroll = () => setMaskVisible(false);
+    window.addEventListener("scroll", hideMaskOnScroll, { passive: true });
+    return () => window.removeEventListener("scroll", hideMaskOnScroll);
+  }, []);
+
+  useEffect(() => {
+    const elements = [...document.querySelectorAll(".section, .contact")];
+    elements.forEach((element) => element.classList.add("scroll-reveal"));
+
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return undefined;
+    }
+
+    const observer = new window.IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8%" });
+
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -414,49 +590,44 @@ export function App() {
           onPointerLeave={handlePointerLeave}
         >
           <div className="hero-zone hero-name-zone" onMouseEnter={() => selectStage("intent", 2600)}>
-            <span className="eyebrow">AGENT APPLICATION DEVELOPER</span>
+            <span className="eyebrow">AGENT APPLICATION ENGINEER</span>
             <h1>梁伟业</h1>
           </div>
           <div className="hero-zone hero-title-zone" data-testid="hero-title-zone" onMouseEnter={() => selectStage("plan", 2600)}>
             <span className="red-rule" />
-            <h2>把 Agent 做成真正能交付的产品</h2>
+            <h2 aria-label="把 Agent 从 Demo 做到可交付产品"><span>把 Agent 从 Demo</span><span>做到可交付产品</span></h2>
           </div>
-          <div className="hero-zone hero-stack" onMouseEnter={() => selectStage("rag", 2600)}>
-            <p>Agent 应用开发 / LangGraph / RAG / Harness Engineering</p>
+          <div className="hero-zone hero-stack" onMouseEnter={() => selectStage("decide", 2600)}>
+            <p>Agent 应用开发 · LangGraph · RAG · Harness Engineering</p>
+            <small>从意图路由、知识检索到工具编排，构建可追踪、可恢复、可评测的 Agent 系统。</small>
           </div>
           <div className="hero-actions" onMouseEnter={() => selectStage("tools", 2600)}>
-            <button type="button" className="primary-button" onClick={() => scrollToSection("projects")}>
-              查看项目 <ArrowRight weight="bold" />
-            </button>
+            <a className="primary-button" href="#projects">
+              查看 Agent 项目 <ArrowRight weight="bold" />
+            </a>
             <a
               className="secondary-button"
               href="/梁伟业简历_Agent开发.pdf"
               download="梁伟业简历_Agent开发.pdf"
             >
-              下载简历 <DownloadSimple weight="bold" />
+              下载 PDF 简历 <DownloadSimple weight="bold" />
+            </a>
+            <a className="tertiary-button" href="#contact">
+              联系我 <ChatCircleDots weight="bold" />
             </a>
           </div>
-          <div className="hero-statement" onMouseEnter={() => selectStage("plan", 2600)}>
-            <span />
-            <p>从意图识别，到工具执行，再到结果校验</p>
-          </div>
           <div className="hero-metrics" onMouseEnter={() => selectStage("verify", 2600)}>
-            <div><strong>3 个完整 Agent 项目</strong><span>端到端落地</span></div>
-            <div><strong>意图识别约 95%</strong><span>多场景评测</span></div>
-            <div><strong>RAG 召回率 91.3%</strong><span>领域知识库评测</span></div>
+            <div><strong>意图路由</strong><span>多场景任务分类</span></div>
+            <div><strong>知识检索</strong><span>混合检索与重排</span></div>
+            <div><strong>工具编排</strong><span>可追踪、可恢复、可评测</span></div>
           </div>
           <div
             ref={insightMaskRef}
             className="insight-mask"
             data-testid="insight-mask"
             aria-hidden="true"
-            style={{ "--mask-x": "72%", "--mask-y": "24%" }}
-            aria-live="polite"
-          >
-            <span>{insights[activeStage].kicker}</span>
-            <strong>{insights[activeStage].primary}</strong>
-            <small>{insights[activeStage].secondary}</small>
-          </div>
+            style={{ "--mask-x": "0px", "--mask-y": "0px" }}
+          />
         </div>
 
         <AgentMap
@@ -465,7 +636,7 @@ export function App() {
         />
         <div className="hero-next-band" aria-hidden="true">
           <span />
-          <p>从意图识别，到工具执行，再到结果校验</p>
+          <p>把复杂问题拆成可执行路径，用工程确定性兑现可验证结果</p>
           <span />
           <i />
         </div>
@@ -507,7 +678,7 @@ export function App() {
       <section className="skills section" id="skills">
         <div className="section-heading">
           <div><span className="section-index">/ 03</span><h2>技术能力</h2></div>
-          <p>不是工具清单。展开每一项，查看我如何把技术放进真实 Agent 链路，以及项目中的可验证结果。</p>
+          <p>我擅长的不只是接入模型，而是把 Agent 链路做到可编排、可评估、可恢复、可交付。</p>
         </div>
         <div className="capability-list">
           {capabilities.map((capability) => (
@@ -516,6 +687,7 @@ export function App() {
               capability={capability}
               open={openCapability === capability.id}
               onToggle={() => setOpenCapability(openCapability === capability.id ? "" : capability.id)}
+              onOpenProject={handleOpenEvidenceProject}
             />
           ))}
         </div>

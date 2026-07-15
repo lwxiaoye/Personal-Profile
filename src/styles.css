@@ -113,7 +113,7 @@ a:focus-visible {
   min-height: var(--viewport-height);
   height: var(--viewport-height);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(480px, 0.95fr);
+  grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1fr);
   gap: 2vw;
   padding: calc(var(--header-height) + 24px) 3.2vw 54px;
   overflow: hidden;
@@ -125,7 +125,19 @@ a:focus-visible {
   min-width: 0;
   padding: clamp(30px, 5vh, 50px) 0 56px 1vw;
   overflow: hidden;
-  cursor: crosshair;
+  cursor: default;
+}
+
+@media (min-width: 821px) {
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-copy > .hero-metrics {
+    margin-top: auto;
+    margin-bottom: clamp(12px, 2vh, 24px);
+  }
 }
 
 .hero-zone,
@@ -155,49 +167,66 @@ a:focus-visible {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(88px, 9vw, 154px);
-  line-height: 0.88;
+  font-size: clamp(70px, 7vw, 118px);
+  line-height: 0.9;
   font-weight: 700;
   letter-spacing: 0;
 }
 
 .hero-title-zone {
-  margin-top: 42px;
+  margin-top: 32px;
 }
 
 .red-rule {
   display: block;
   width: 58px;
   height: 3px;
-  margin-bottom: 30px;
+  margin-bottom: 22px;
   background: var(--red);
 }
 
 .hero h2 {
   margin: 0;
   max-width: 650px;
-  font-size: clamp(30px, 3.2vw, 52px);
-  line-height: 1.15;
-  font-weight: 650;
+  font-size: clamp(32px, 3.35vw, 50px);
+  line-height: 1.12;
+  font-weight: 700;
   letter-spacing: 0;
 }
 
+.hero h2 span {
+  display: block;
+  white-space: nowrap;
+}
+
 .hero-stack p {
-  margin: 22px 0 0;
-  color: var(--muted);
+  margin: 20px 0 0;
+  color: var(--ink);
   font-size: 15px;
+  font-weight: 500;
+}
+
+.hero-stack small {
+  display: block;
+  max-width: 620px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .hero-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 40px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
 }
 
 .primary-button,
-.secondary-button {
-  min-width: 168px;
-  height: 58px;
+.secondary-button,
+.tertiary-button {
+  min-width: 176px;
+  min-height: 54px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -206,10 +235,11 @@ a:focus-visible {
   border-radius: 0;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
 }
 
 .primary-button {
+  min-width: 192px;
   background: var(--ink);
   color: white;
 }
@@ -219,14 +249,51 @@ a:focus-visible {
   color: var(--ink);
 }
 
+.tertiary-button {
+  min-width: 116px;
+  padding-inline: 18px;
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
 .primary-button:hover,
-.secondary-button:hover {
-  transform: translateY(-3px);
+.secondary-button:hover,
+.tertiary-button:hover {
+  transform: translateY(-2px);
 }
 
 .secondary-button:hover {
   background: var(--ink);
   color: white;
+}
+
+.primary-button:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.tertiary-button:hover {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: white;
+}
+
+.primary-button:hover svg,
+.primary-button:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.primary-button svg,
+.secondary-button svg,
+.tertiary-button svg {
+  transition: transform 160ms ease;
+}
+
+.primary-button:active,
+.secondary-button:active,
+.tertiary-button:active {
+  transform: translateY(0);
 }
 
 .hero-statement {
@@ -252,7 +319,7 @@ a:focus-visible {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   max-width: 650px;
-  margin-top: 42px;
+  margin-top: 32px;
   border-top: 1px solid var(--line);
 }
 
@@ -260,6 +327,7 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-height: 76px;
   padding: 18px 20px 0 0;
   border-right: 1px solid var(--line);
 }
@@ -274,19 +342,20 @@ a:focus-visible {
 }
 
 .hero-metrics strong {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .hero-metrics span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .insight-mask {
-  --mask-size: clamp(250px, 22vw, 350px);
-  position: absolute;
-  z-index: 8;
+  --mask-size: clamp(180px, 16vw, 240px);
+  position: fixed;
+  z-index: 16;
   left: var(--mask-x);
   top: var(--mask-y);
   width: var(--mask-size);
@@ -295,17 +364,19 @@ a:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 52px;
+  padding: 0;
   overflow: hidden;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
-  color: #000;
-  mix-blend-mode: difference;
+  background: transparent;
+  color: white;
+  -webkit-backdrop-filter: invert(1);
+  backdrop-filter: invert(1);
   pointer-events: none;
   text-align: center;
   opacity: 0;
   visibility: hidden;
+  transition: none;
 }
 
 .insight-mask[aria-hidden="false"] {
@@ -317,7 +388,7 @@ a:focus-visible {
   content: "";
   position: absolute;
   inset: 18px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
 }
 
@@ -327,6 +398,17 @@ a:focus-visible {
   color: #000;
   font-size: 10px;
   letter-spacing: 0.08em;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 560ms ease, transform 620ms cubic-bezier(0.2, 0.72, 0.2, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .insight-mask strong {
@@ -349,14 +431,14 @@ a:focus-visible {
 .agent-map {
   align-self: center;
   min-width: 0;
-  margin-top: 20px;
+  margin-top: 6px;
 }
 
 .map-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 0 4.5vw 14px 2.5vw;
+  padding: 0 2vw 14px 2vw;
 }
 
 .map-header .eyebrow {
@@ -369,34 +451,481 @@ a:focus-visible {
   font-size: 20px;
 }
 
+.hero .map-header h2 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
 .map-status {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.map-status i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #30bcca;
-  box-shadow: 0 0 0 5px rgba(48, 188, 202, 0.12);
-  animation: pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% { transform: scale(0.72); opacity: 0.55; }
+  color: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
 }
 
 .map-stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1.15 / 1;
-  max-height: 610px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
+  aspect-ratio: 1000 / 590;
+  max-height: 590px;
+}
+
+.runtime-map-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  color: var(--ink);
+}
+
+.harness-motion-main,
+.harness-motion-vertical,
+.harness-motion-context {
+  transform-box: view-box;
+  transform-origin: 500px 295px;
+}
+
+.harness-motion-main { animation: harness-main-swing 20s ease-in-out infinite alternate; }
+.harness-motion-vertical { animation: harness-vertical-turn 30s linear infinite; }
+.harness-motion-context { animation: harness-context-swing 27s ease-in-out infinite alternate-reverse; }
+
+.harness-orbit,
+.context-orbit {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.harness-orbit {
+  stroke: rgba(112, 111, 107, 0.45);
+  stroke-width: 1;
+}
+
+.harness-orbit-vertical {
+  stroke: rgba(112, 111, 107, 0.34);
+}
+
+.context-orbit {
+  stroke: rgba(101, 147, 95, 0.35);
+  stroke-width: 1;
+}
+
+@keyframes harness-main-swing { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes harness-vertical-turn { to { transform: rotate(360deg); } }
+@keyframes harness-context-swing { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
+
+.runtime-segment,
+.runtime-output-path {
+  stroke: #45413c;
+  stroke-width: 2.2;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 180ms ease, stroke-width 180ms ease;
+}
+
+.runtime-segment.is-active,
+.runtime-output-path.is-active {
+  stroke: var(--red);
+  stroke-width: 2.8;
+}
+
+#arrow-dark path { fill: #45413c; }
+#arrow-red path { fill: var(--red); }
+#arrow-green path { fill: #65935f; }
+#arrow-blue path { fill: #496b9d; }
+
+.runtime-return-path {
+  stroke: #8c8880;
+  stroke-width: 1.25;
+  stroke-dasharray: 7 7;
+  vector-effect: non-scaling-stroke;
+}
+
+.context-link {
+  stroke-width: 1.35;
+  stroke-dasharray: 5 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.rag-context-link { stroke: url(#rag-context-path); }
+.context-plan-link { stroke: #496b9d; }
+
+.execution-route {
+  stroke: transparent;
+  pointer-events: none;
+}
+
+.execution-signal {
+  fill: var(--red);
+  stroke: var(--paper);
+  stroke-width: 1.4;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.runtime-task-core-float {
+  animation: runtime-core-float 4.8s ease-in-out infinite;
+}
+
+@keyframes runtime-core-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.task-core-etched-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: core-etched-turn 9.2s linear infinite;
+}
+
+@keyframes core-etched-turn { to { transform: rotate(360deg); } }
+
+.task-core-halo {
+  fill: rgba(248, 247, 243, 0.72);
+  stroke: rgba(112, 111, 107, 0.35);
+  stroke-width: 1;
+}
+
+.task-core-metal {
+  fill: none;
+  stroke: url(#metal-edge);
+  stroke-width: 8;
+}
+
+.task-core-shell {
+  fill: rgba(248, 247, 243, 0.52);
+  stroke: rgba(18, 18, 16, 0.35);
+  stroke-width: 1.2;
+}
+
+.task-core-ceramic {
+  fill: url(#ceramic-core);
+  stroke: rgba(18, 18, 16, 0.2);
+  stroke-width: 0.8;
+}
+
+.task-core-etched {
+  fill: none;
+  stroke: rgba(18, 18, 16, 0.18);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 5;
+}
+
+.task-core-arc {
+  fill: none;
+  stroke: rgba(18, 18, 16, 0.22);
+  stroke-width: 0.8;
+}
+
+.task-core-highlight {
+  fill: rgba(255, 255, 255, 0.36);
+}
+
+.task-core-en,
+.task-core-cn,
+.runtime-node-index,
+.runtime-node-name,
+.runtime-node-detail,
+.map-label-en,
+.map-label-cn,
+.return-path-label,
+.harness-copy {
+  user-select: none;
+  pointer-events: none;
+}
+
+.task-core-en {
+  fill: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.task-core-cn {
+  fill: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.runtime-stage-node {
+  cursor: pointer;
+  outline: none;
+}
+
+.planet-surface {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.86);
+  transform-origin: 0 0;
+  transition: opacity 220ms ease, transform 260ms ease;
+}
+
+.planet-halo {
+  fill: none;
+  stroke: var(--planet-glow);
+  stroke-width: 1.1;
+  opacity: 0.38;
+  vector-effect: non-scaling-stroke;
+}
+
+.planet-body {
+  stroke: color-mix(in srgb, var(--planet-shadow) 72%, white);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.planet-texture-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: planet-surface-spin 8.4s linear infinite paused;
+}
+
+@keyframes planet-surface-spin {
+  to { transform: rotate(360deg); }
+}
+
+.planet-craters circle {
+  fill: rgba(26, 31, 33, 0.2);
+  stroke: rgba(242, 244, 244, 0.2);
+  stroke-width: 0.6;
+}
+
+.planet-clouds path,
+.planet-minerals path,
+.planet-bands path,
+.planet-latitude {
+  fill: none;
+  stroke: rgba(255, 253, 246, 0.28);
+  stroke-width: 2.1;
+}
+
+.planet-minerals circle { fill: rgba(79, 45, 41, 0.3); }
+.planet-continents path { fill: rgba(102, 139, 122, 0.72); }
+.planet-bands path { stroke: rgba(88, 71, 61, 0.24); stroke-width: 3.2; }
+.planet-bands ellipse { fill: rgba(168, 111, 88, 0.48); }
+.planet-latitude { stroke: rgba(103, 91, 73, 0.25); }
+
+.planet-specular {
+  fill: rgba(255, 255, 255, 0.3);
+  transform: rotate(-18deg);
+}
+
+.saturn-ring {
+  fill: none;
+  stroke: #cbb991;
+  stroke-width: 1.8;
+  opacity: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.runtime-stage-node:hover .planet-surface,
+.runtime-stage-node:focus-visible .planet-surface,
+.runtime-stage-node.is-active .planet-surface {
+  opacity: 1;
+  transform: scale(1.24);
+}
+
+.runtime-stage-node:hover .planet-texture-spin,
+.runtime-stage-node:focus-visible .planet-texture-spin,
+.runtime-stage-node.is-active .planet-texture-spin {
+  animation-play-state: running;
+}
+
+.runtime-stage-node:hover .runtime-node-circle,
+.runtime-stage-node:focus-visible .runtime-node-circle {
+  opacity: 0;
+}
+
+.runtime-stage-node.is-active .planet-surface {
+  opacity: 1;
+  transition: none;
+}
+
+.runtime-stage-node.is-active .runtime-node-circle {
+  opacity: 0;
+  transition: none;
+}
+
+.runtime-stage-node:hover .runtime-node-name,
+.runtime-stage-node:focus-visible .runtime-node-name {
+  fill: var(--planet-shadow);
+}
+
+.runtime-node-hit {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.runtime-node-circle {
+  fill: var(--paper);
+  stroke: #8f8a82;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: fill 180ms ease, stroke 180ms ease, opacity 200ms ease;
+}
+
+.runtime-stage-node:focus-visible .runtime-node-circle {
+  stroke: var(--red);
+  stroke-width: 3;
+}
+
+.runtime-stage-node:focus-visible .planet-halo {
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  opacity: 0.92;
+}
+
+.runtime-stage-node:hover .runtime-node-index,
+.runtime-stage-node:focus-visible .runtime-node-index {
+  fill: white;
+}
+
+.runtime-stage-node[data-planet="mercury"]:hover .runtime-node-index,
+.runtime-stage-node[data-planet="mercury"]:focus-visible .runtime-node-index,
+.runtime-stage-node[data-planet="mercury"].is-active .runtime-node-index,
+.runtime-stage-node[data-planet="venus"]:hover .runtime-node-index,
+.runtime-stage-node[data-planet="venus"]:focus-visible .runtime-node-index,
+.runtime-stage-node[data-planet="venus"].is-active .runtime-node-index,
+.runtime-stage-node[data-planet="saturn"]:hover .runtime-node-index,
+.runtime-stage-node[data-planet="saturn"]:focus-visible .runtime-node-index,
+.runtime-stage-node[data-planet="saturn"].is-active .runtime-node-index {
+  fill: #342f28;
+}
+
+.runtime-node-index {
+  fill: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.runtime-stage-node[data-planet="earth"].is-active .runtime-node-index,
+.runtime-stage-node[data-planet="mars"].is-active .runtime-node-index,
+.runtime-stage-node[data-planet="jupiter"].is-active .runtime-node-index {
+  fill: white;
+}
+
+.runtime-node-name {
+  fill: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.runtime-node-detail {
+  fill: var(--muted);
+  font-size: 14px;
+}
+
+.output-endpoint circle {
+  fill: #45413c;
+}
+
+.context-input circle {
+  stroke: #253a64;
+  stroke-width: 0.8;
+}
+
+.rag-node-planet {
+  stroke: #467875;
+  stroke-width: 1.2;
+}
+
+.rag-node-motion {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rag-planet-turn 14s linear infinite;
+}
+
+@keyframes rag-planet-turn { to { transform: rotate(360deg); } }
+
+.rag-node-band {
+  fill: none;
+  stroke: rgba(230, 248, 245, 0.52);
+  stroke-width: 1.4;
+}
+
+.rag-node-highlight {
+  fill: rgba(255, 255, 255, 0.45);
+}
+
+.map-label-en {
+  fill: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.map-label-cn {
+  fill: var(--muted);
+  font-size: 14px;
+}
+
+.context-input .map-label-en,
+.context-input .map-label-cn {
+  fill: #496b9d;
+}
+
+.rag-memory .map-label-en,
+.rag-memory .map-label-cn {
+  fill: #4f7f4a;
+}
+
+.return-path-label,
+.harness-copy {
+  fill: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: 0.08em;
+}
+
+.return-path-label { font-size: 10px; }
+.harness-copy { font-size: 9px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.harness-boundary {
+  position: absolute;
+  z-index: 0;
+  inset: 4% 3% 5%;
+  border: 1px solid rgba(18, 18, 16, 0.24);
+  border-radius: 50%;
+}
+
+.harness-label {
+  position: absolute;
+  z-index: 3;
+  left: 7%;
+  bottom: 2.5%;
+  max-width: 72%;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 3px 8px;
+  background: var(--paper);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.harness-label strong {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.harness-label span {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
 }
 
 .agent-canvas {
@@ -410,7 +939,7 @@ a:focus-visible {
 .orbit-space {
   position: absolute;
   z-index: 0;
-  inset: 13% 18%;
+  inset: 19% 23%;
   transform-style: preserve-3d;
   animation: orbit-space-breathe 8s ease-in-out infinite;
 }
@@ -418,7 +947,7 @@ a:focus-visible {
 .orbit-plane {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(18, 18, 16, 0.16);
+  border: 1px solid rgba(18, 18, 16, 0.1);
   border-radius: 50%;
   transform-style: preserve-3d;
 }
@@ -463,8 +992,8 @@ a:focus-visible {
   z-index: 2;
   left: 50%;
   top: calc(50% + 8px);
-  width: 96px;
-  height: 96px;
+  width: 90px;
+  height: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -472,8 +1001,7 @@ a:focus-visible {
   border: 1px solid rgba(18, 18, 16, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(248, 247, 243, 0.85);
-  backdrop-filter: blur(4px);
+  background: rgba(248, 247, 243, 0.94);
   animation: task-core-float 4.8s ease-in-out infinite;
 }
 
@@ -516,13 +1044,15 @@ a:focus-visible {
   border: 0;
   background: rgba(248, 247, 243, 0.78);
   cursor: pointer;
+  transform: translate(-50%, -50%);
 }
 
-.stage-intent { left: 43%; top: 9%; }
-.stage-plan { right: 2%; top: 37%; }
-.stage-rag { right: 12%; bottom: 7%; }
-.stage-tools { left: 12%; bottom: 9%; }
-.stage-verify { left: 0; top: 39%; }
+.stage-intent { left: 49%; top: 16%; }
+.stage-plan { left: 72%; top: 29%; }
+.stage-decide { left: 75%; top: 54%; }
+.stage-tools { left: 61%; top: 76%; }
+.stage-observe { left: 35%; top: 76%; }
+.stage-verify { left: 21%; top: 53%; }
 
 .node-dot {
   width: 28px;
@@ -533,13 +1063,15 @@ a:focus-visible {
   border-radius: 50%;
   font-family: "IBM Plex Mono", monospace;
   font-size: 10px;
+  flex: 0 0 auto;
+  background: var(--paper);
   transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 .stage-node[aria-pressed="true"] .node-dot {
-  background: var(--node-color);
+  background: var(--ink);
   color: white;
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--node-color) 18%, transparent);
+  box-shadow: 0 0 0 4px rgba(18, 18, 16, 0.12);
 }
 
 .node-copy {
@@ -550,20 +1082,92 @@ a:focus-visible {
 
 .node-copy strong {
   font-size: 14px;
+  line-height: 1.2;
 }
 
 .node-copy small {
   color: var(--muted);
+  max-width: 112px;
+  margin-top: 2px;
   font-size: 10px;
+  line-height: 1.35;
+}
+
+.context-node,
+.rag-node,
+.output-node {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 7px;
+  background: var(--paper);
+}
+
+.context-node { right: 2%; top: 14%; }
+.rag-node { right: 2%; bottom: 17%; color: #4f8a4f; }
+.output-node { left: 1%; top: 25%; }
+
+.context-node strong,
+.rag-node strong,
+.output-node strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.context-node span,
+.rag-node span,
+.output-node span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.rag-node span { color: #4f8a4f; }
+
+.return-label {
+  position: absolute;
+  z-index: 3;
+  left: 19%;
+  top: 22%;
+  padding: 2px 5px;
+  background: var(--paper);
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 7px;
+  letter-spacing: 0.05em;
+}
+
+.signal-legend {
+  position: absolute;
+  z-index: 3;
+  right: 5%;
+  bottom: 5%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 5px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.signal-legend i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e54e37;
 }
 
 .map-footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  padding: 14px 2.5vw 0;
+  padding: 14px 2vw 0;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10px;
+  font-weight: 500;
 }
 
 .map-footer span:nth-child(2) { text-align: center; }
@@ -847,9 +1451,9 @@ a:focus-visible {
   width: 100%;
   min-height: 132px;
   display: grid;
-  grid-template-columns: 220px minmax(190px, 0.65fr) minmax(360px, 1.35fr) 44px;
+  grid-template-columns: 160px minmax(220px, 0.72fr) minmax(340px, 1.2fr) minmax(160px, 0.58fr) 44px;
   align-items: center;
-  gap: 40px;
+  gap: 24px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -877,9 +1481,23 @@ a:focus-visible {
   font-weight: 600;
 }
 
+.capability-summary {
+  max-width: 620px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.75;
+}
+
 .capability-stack {
   color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
   line-height: 1.8;
+}
+
+.capability-trigger:hover .capability-summary,
+.capability-row.is-open .capability-summary {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .capability-trigger:hover .capability-stack,
@@ -939,6 +1557,36 @@ a:focus-visible {
 .capability-detail strong {
   font-size: 21px;
   line-height: 1.5;
+}
+
+.capability-project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.capability-project-link {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 4px;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.capability-project-link svg {
+  font-size: 13px;
+  transition: transform 180ms ease;
+}
+
+.capability-project-link:hover svg {
+  transform: translateX(3px);
 }
 
 .experience-base {
@@ -1120,11 +1768,13 @@ a:focus-visible {
 
 .contact-actions a,
 .contact-actions button {
+  width: 100%;
   min-height: 84px;
   display: grid;
   grid-template-columns: 150px 1fr 24px;
   align-items: center;
   gap: 20px;
+  border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   color: white;
   background: transparent;
@@ -1182,17 +1832,49 @@ a:focus-visible {
   font-size: 10px;
 }
 
+@media (max-width: 1439px) {
+  .runtime-node-name { font-size: 22px; }
+  .runtime-node-detail { font-size: 14px; }
+  .map-label-en { font-size: 12px; }
+  .map-label-cn { font-size: 14px; }
+  .return-path-label,
+  .harness-copy { font-size: 10px; }
+}
+
 @media (max-width: 1100px) {
   .hero {
-    grid-template-columns: 1fr 0.82fr;
+    grid-template-columns: minmax(0, 1fr) minmax(450px, 1fr);
   }
 
   .insight-mask {
-    --mask-size: 280px;
+    --mask-size: 210px;
   }
 
   .hero h1 {
-    font-size: 94px;
+    font-size: 82px;
+  }
+
+  .hero h2 { font-size: 38px; }
+
+  .primary-button { min-width: 174px; }
+  .secondary-button { min-width: 162px; }
+
+  .node-copy strong { font-size: 13px; }
+  .node-copy small { font-size: 9px; }
+
+  .runtime-node-name { font-size: 23px; }
+  .runtime-node-detail { font-size: 20px; }
+  .map-label-en { font-size: 18px; }
+  .map-label-cn { font-size: 19px; }
+  .return-path-label,
+  .harness-copy { font-size: 14px; }
+  .task-core-en { font-size: 16px; }
+  .task-core-cn { font-size: 22px; }
+
+  .runtime-stage-node:hover .planet-surface,
+  .runtime-stage-node:focus-visible .planet-surface,
+  .runtime-stage-node.is-active .planet-surface {
+    transform: scale(1.17);
   }
 
   .project-trigger {
@@ -1228,13 +1910,16 @@ a:focus-visible {
   .hero-stack p,
   .hero-actions,
   .hero-statement,
-  .hero-metrics {
+  .hero-copy > .hero-metrics {
     margin-top: 20px;
+    margin-bottom: 0;
   }
 
   .primary-button,
-  .secondary-button {
+  .secondary-button,
+  .tertiary-button {
     height: 48px;
+    min-height: 48px;
   }
 
   .hero-statement span {
@@ -1310,7 +1995,7 @@ a:focus-visible {
   }
 
   .hero h1 {
-    font-size: clamp(68px, 22vw, 98px);
+    font-size: clamp(58px, 18vw, 82px);
   }
 
   .hero-title-zone {
@@ -1318,8 +2003,37 @@ a:focus-visible {
   }
 
   .hero h2 {
-    font-size: clamp(28px, 8vw, 42px);
+    font-size: clamp(28px, 8.5vw, 40px);
   }
+
+  .hero h2 span { white-space: normal; }
+
+  .hero-stack p { font-size: 14px; }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .tertiary-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    padding-inline: 14px;
+    gap: 10px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    padding-inline: 10px;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .tertiary-button { grid-column: 1 / -1; }
 
   .insight-mask {
     display: none;
@@ -1359,8 +2073,50 @@ a:focus-visible {
   }
 
   .map-stage {
-    min-height: 390px;
-    perspective: 700px;
+    min-height: 0;
+    width: calc(100% + 44px);
+    margin-left: -22px;
+    aspect-ratio: 1000 / 590;
+  }
+
+  .runtime-node-circle { r: 28px; }
+  .planet-body,
+  .planet-clip { r: 28px; }
+  .runtime-node-hit { r: 58px; }
+  .runtime-node-name { font-size: 28px; }
+  .runtime-node-detail { display: none; }
+  .runtime-node-index { font-size: 18px; }
+  .map-label-en { font-size: 22px; }
+  .map-label-cn { font-size: 22px; }
+  .rag-memory .map-label-en,
+  .rag-memory .map-label-cn { font-size: 18px; }
+  .context-input .map-label-en { font-size: 18px; }
+  .return-path-label { font-size: 20px; }
+  .harness-copy { font-size: 15px; letter-spacing: 0.04em; }
+  .task-core-en { font-size: 20px; }
+  .task-core-cn { font-size: 28px; }
+  .runtime-segment,
+  .runtime-output-path { stroke-width: 1.7; }
+  .runtime-segment.is-active,
+  .runtime-output-path.is-active { stroke-width: 2.2; }
+  .runtime-return-path,
+  .context-link { stroke-width: 1; }
+
+  .runtime-stage-node:hover .planet-surface,
+  .runtime-stage-node:focus-visible .planet-surface,
+  .runtime-stage-node.is-active .planet-surface {
+    transform: scale(1.1);
+  }
+
+  .planet-halo,
+  .planet-craters,
+  .planet-clouds,
+  .planet-continents,
+  .planet-minerals,
+  .planet-bands,
+  .planet-latitude,
+  .planet-specular {
+    display: none;
   }
 
   .orbit-space {
@@ -1376,8 +2132,28 @@ a:focus-visible {
     height: 82px;
   }
 
-  .stage-plan { right: 0; }
-  .stage-verify { left: 0; }
+  .stage-node { gap: 6px; padding: 3px; }
+  .node-dot { width: 24px; height: 24px; }
+  .node-copy strong { font-size: 12px; }
+  .node-copy small { max-width: 92px; font-size: 8px; }
+
+  .context-node { right: 0; top: 12%; }
+  .rag-node { right: 0; bottom: 14%; }
+  .output-node { left: 0; top: 24%; }
+
+  .harness-label {
+    left: 4%;
+    right: 4%;
+    bottom: 1%;
+    max-width: none;
+    align-items: flex-start;
+  }
+
+  .harness-label span { font-size: 7px; }
+
+  .return-label { left: 15%; top: 20%; }
+
+  .map-footer { font-size: 8px; }
 
   .scroll-cue {
     display: none;
@@ -1459,6 +2235,7 @@ a:focus-visible {
 
   .capability-code,
   .capability-title,
+  .capability-summary,
   .capability-stack {
     grid-column: 1;
   }
@@ -1473,7 +2250,7 @@ a:focus-visible {
 
   .capability-toggle {
     grid-column: 2;
-    grid-row: 1 / 4;
+    grid-row: 1 / 5;
   }
 
   .capability-detail {
@@ -1576,8 +2353,34 @@ a:focus-visible {
   .orbit-space,
   .orbit-plane,
   .task-core,
+  .harness-motion-main,
+  .harness-motion-vertical,
+  .harness-motion-context,
+  .runtime-task-core-float,
+  .task-core-etched-layer,
+  .planet-texture-spin,
+  .rag-node-motion,
   .map-status i,
   .scroll-cue svg {
     animation: none !important;
+  }
+
+  .planet-surface {
+    transition: none !important;
+  }
+
+  .insight-mask {
+    transition: none !important;
+  }
+
+  .scroll-reveal,
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+
+  .execution-signal {
+    display: none;
   }
 }

@@ -4,6 +4,7 @@ dist/
 .superpowers/
 coverage/
 tmp/
+artifacts/
 
 .env
 .env.*
