@@ -21,7 +21,7 @@
 
 - [x] **Step 1: Adopt the user-selected master icon**
 
-Use `public/agent-orbit-favicon-master.png`, the repository copy of the image explicitly selected by the user, as the source of truth. It retains the warm-white background, centered black precision core, three black orbital paths, exactly one small circular warm-red `#e54e37` signal, and no text. Do not regenerate it or replace unrelated assets, and preserve a silhouette that remains recognizable at 16×16 pixels.
+Use `public/agent-orbit-favicon-master.png`, the repository copy of the image explicitly selected by the user, as the source of truth. It retains the warm-white background, centered black precision core, three black orbital paths, exactly one small circular warm-red signal targeting `#e54e37`, and no text. Do not regenerate it or replace unrelated assets, and preserve a silhouette that remains recognizable at 16×16 pixels.
 
 - [x] **Step 2: Derive browser-sized files**
 
@@ -47,7 +47,7 @@ Expected: `favicon-32.png` is 32×32 and `favicon-16.png` is 16×16.
 
 - [x] **Step 3: Visually inspect all three assets**
 
-Open the master and both reductions. Confirm the icon matches the user-selected three-orbit source: one `#e54e37` warm-red signal, a centered black core, three readable black orbit lines, and no unintended text or extra decoration. Confirm the 16×16 reduction remains legible.
+Open the master and both reductions. Confirm the icon matches the user-selected three-orbit source: one warm-red signal targeting `#e54e37`, a centered black core, three readable black orbit lines, and no unintended text or extra decoration. Confirm the 16×16 reduction remains legible.
 
 - [x] **Step 4: Commit the icon assets**
 
@@ -60,7 +60,7 @@ git show --stat --oneline 8143378e07cf545ca77841e5c4890c720bf10a50 -- public/age
 **Files:**
 - Modify: `index.html`
 
-- [ ] **Step 1: Add explicit favicon declarations**
+- [x] **Step 1: Add explicit favicon declarations**
 
 Add these entries after the viewport meta element:
 
@@ -69,7 +69,7 @@ Add these entries after the viewport meta element:
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
 ```
 
-- [ ] **Step 2: Run a production build**
+- [x] **Step 2: Run a production build**
 
 ```powershell
 & 'C:\Users\31898\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' node_modules/vite/bin/vite.js build
@@ -77,11 +77,10 @@ Add these entries after the viewport meta element:
 
 Expected: Vite exits with code 0 and both favicon files appear in `dist`.
 
-- [ ] **Step 3: Commit the favicon declaration**
+- [x] **Step 3: Commit the favicon declaration (`16d6aa0`)**
 
 ```powershell
-git add index.html
-git commit -m "feat: use Agent orbit browser icon"
+git show --stat --oneline 16d6aa0 -- index.html
 ```
 
 ### Task 3: Specify project-link behavior with failing tests
@@ -89,7 +88,7 @@ git commit -m "feat: use Agent orbit browser icon"
 **Files:**
 - Modify: `src/App.test.jsx`
 
-- [ ] **Step 1: Replace the deployed-only test with destination assertions**
+- [x] **Step 1: Replace the deployed-only test with destination assertions**
 
 Test CareerForge as an internal current-tab destination, then assert both actions for service and medical use their GitHub repository and open a new tab:
 
@@ -118,19 +117,22 @@ it("routes project experience and source actions to their configured destination
 });
 ```
 
-- [ ] **Step 2: Run the focused test to verify it fails**
+- [x] **Step 2: Record the focused RED result at the pre-implementation commit point**
+
+The RED result was captured after the final assertion strengthening in `89b531c`, before implementation commit `456c875`. The command below is the historical command for a checkout of `89b531c`; running it at the current HEAD is expected to pass and must not be presented as RED evidence.
 
 ```powershell
+# Run from a worktree checked out at 89b531c, not from the current HEAD.
 & 'C:\Users\31898\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' node_modules/vitest/vitest.mjs run src/App.test.jsx -t "routes project experience"
 ```
 
-Expected: FAIL because service and medical do not yet render experience/source links.
+Recorded at `89b531c`: FAIL because service and medical did not yet render the required experience/source links. Current HEAD: PASS after `456c875`.
 
-- [ ] **Step 3: Commit the failing test**
+- [x] **Step 3: Commit and strengthen the failing test (`b57302a`, `89b531c`)**
 
 ```powershell
-git add src/App.test.jsx
-git commit -m "test: specify portfolio project destinations"
+git show --stat --oneline b57302a -- src/App.test.jsx
+git show --stat --oneline 89b531c -- src/App.test.jsx
 ```
 
 ### Task 4: Implement external project destinations
@@ -139,7 +141,7 @@ git commit -m "test: specify portfolio project destinations"
 - Modify: `src/portfolio-data.js`
 - Modify: `src/App.jsx`
 
-- [ ] **Step 1: Configure the service and medical destinations**
+- [x] **Step 1: Configure the service and medical destinations**
 
 Set both fields for each undeployed project:
 
@@ -153,7 +155,7 @@ livePath: "https://github.com/lwxiaoye/medical-RAG-",
 sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
 ```
 
-- [ ] **Step 2: Apply external-link attributes to live destinations**
+- [x] **Step 2: Apply external-link attributes to live destinations**
 
 Inside `ProjectRow`, derive external status and conditionally spread the safe new-tab attributes:
 
@@ -169,7 +171,7 @@ const liveIsExternal = /^https?:\/\//.test(project.livePath ?? "");
 </a>
 ```
 
-- [ ] **Step 3: Run the focused test to verify it passes**
+- [x] **Step 3: Run the focused test to verify it passes**
 
 ```powershell
 & 'C:\Users\31898\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' node_modules/vitest/vitest.mjs run src/App.test.jsx -t "routes project experience"
@@ -177,7 +179,7 @@ const liveIsExternal = /^https?:\/\//.test(project.livePath ?? "");
 
 Expected: one passing test and no failures.
 
-- [ ] **Step 4: Run the complete test suite**
+- [x] **Step 4: Run the complete test suite**
 
 ```powershell
 & 'C:\Users\31898\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' node_modules/vitest/vitest.mjs run
@@ -185,11 +187,10 @@ Expected: one passing test and no failures.
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit the implementation**
+- [x] **Step 5: Commit the implementation (`456c875`)**
 
 ```powershell
-git add src/portfolio-data.js src/App.jsx
-git commit -m "feat: add service and medical project links"
+git show --stat --oneline 456c875 -- src/portfolio-data.js src/App.jsx
 ```
 
 ### Task 5: Verify the production experience
