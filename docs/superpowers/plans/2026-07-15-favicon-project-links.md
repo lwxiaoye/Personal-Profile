@@ -4,28 +4,22 @@
 
 **Goal:** Replace the browser icon with a legible Agent-orbit mark and expose working source and temporary experience links for the service and medical projects.
 
-**Architecture:** Keep project destinations in `src/portfolio-data.js` as the single source of truth, and let `ProjectRow` derive whether a live destination is external before applying new-tab attributes. Generate one approved square master icon, derive deterministic 32×32 and 16×16 PNG favicons, and declare both in `index.html`.
+**Architecture:** Keep project destinations in `src/portfolio-data.js` as the single source of truth, and let `ProjectRow` derive whether a live destination is external before applying new-tab attributes. Use the user-selected square three-orbit master image, derive deterministic 32×32 and 16×16 PNG favicons, and declare both in `index.html`.
 
-**Tech Stack:** React 19, Vite 6, Vitest, Testing Library, PNG favicon assets, built-in image generation.
+**Tech Stack:** React 19, Vite 6, Vitest, Testing Library, PNG favicon assets.
 
 ---
 
-### Task 1: Generate and prepare the Agent-orbit favicon
+### Task 1: Adopt and prepare the selected Agent-orbit favicon
 
 **Files:**
 - Create: `public/agent-orbit-favicon-master.png`
 - Create: `public/favicon-32.png`
 - Create: `public/favicon-16.png`
 
-- [ ] **Step 1: Generate the approved master icon**
+- [ ] **Step 1: Adopt the user-selected master icon**
 
-Use the built-in image generator with this production prompt:
-
-```text
-Create a single square browser favicon asset for a Chinese AI Agent application developer portfolio. Minimal editorial symbol only: warm-white #f5f2eb background; centered black precision core; exactly two clean thin orbital paths; exactly one small circular warm-red #e54e37 execution signal on an orbit. Strong silhouette, balanced negative space, crisp geometric edges, flat vector-like raster rendering. No letters, no words, no gradients, no shadows, no 3D, no additional dots, no border, no mockup. It must remain recognizable at 16x16 pixels. Output one centered 1:1 icon.
-```
-
-Save the approved result as `public/agent-orbit-favicon-master.png` without replacing unrelated assets.
+Use the image explicitly selected by the user as the source of truth. It must retain the warm-white background, centered black precision core, three black orbital paths, exactly one small circular warm-red `#e54e37` signal, and no text. Save that supplied image as `public/agent-orbit-favicon-master.png` without regenerating it or replacing unrelated assets, and preserve a silhouette that remains recognizable at 16×16 pixels.
 
 - [ ] **Step 2: Derive browser-sized files**
 
@@ -51,7 +45,7 @@ Expected: `favicon-32.png` is 32×32 and `favicon-16.png` is 16×16.
 
 - [ ] **Step 3: Visually inspect all three assets**
 
-Open the master and both reductions. Confirm the icon has one red signal, a centered black core, two readable orbit lines, and no unintended text or extra decoration.
+Open the master and both reductions. Confirm the icon matches the user-selected three-orbit source: one `#e54e37` warm-red signal, a centered black core, three readable black orbit lines, and no unintended text or extra decoration. Confirm the 16×16 reduction remains legible.
 
 - [ ] **Step 4: Commit the icon assets**
 
