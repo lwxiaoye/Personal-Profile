@@ -148,6 +148,27 @@ export const projects = [
   },
 ];
 
+export const deploymentPages = {
+  "/service": {
+    index: "02",
+    title: "多智能体客服",
+    statusTitle: "多智能体客服正在部署中",
+    description:
+      "项目功能与源码已经完成，目前正在进行线上环境配置与稳定性验证。正式体验入口上线后，这里会第一时间更新。",
+    stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
+    sourceHref: "https://github.com/lwxiaoye/Agent-",
+  },
+  "/medical": {
+    index: "03",
+    title: "医疗 RAG",
+    statusTitle: "医疗 RAG 正在部署中",
+    description:
+      "项目功能与源码已经完成，目前正在进行线上环境配置与稳定性验证。正式体验入口上线后，这里会第一时间更新。",
+    stack: "RAG / Hybrid Search / RRF / Milvus / FastAPI",
+    sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
+  },
+};
+
 export const capabilities = [
   {
     id: "orchestration",

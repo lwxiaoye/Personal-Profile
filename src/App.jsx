@@ -18,6 +18,7 @@ import {
 import {
   availabilityFacts,
   capabilities,
+  deploymentPages,
   experienceProjects,
   planetThemes,
   projects,
@@ -25,6 +26,7 @@ import {
   runtimeSegments,
   stages,
 } from "./portfolio-data.js";
+import { DeploymentStatusPage } from "./DeploymentStatusPage.jsx";
 
 const EMAIL = "lwxiaoye@163.com";
 const ORBIT_SIGNAL_COLOR = "#e54e37";
@@ -449,7 +451,7 @@ function CapabilityRow({ capability, open, onToggle, onOpenProject }) {
   );
 }
 
-export function App() {
+function PortfolioHome() {
   const [activeStage, setActiveStage] = useState("plan");
   const [openProject, setOpenProject] = useState("");
   const [openCapability, setOpenCapability] = useState("orchestration");
@@ -777,4 +779,18 @@ export function App() {
       </footer>
     </main>
   );
+}
+
+function normalizePathname(pathname) {
+  if (pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "");
+}
+
+export function App() {
+  const pathname = normalizePathname(window.location.pathname);
+  const deploymentProject = deploymentPages[pathname];
+
+  return deploymentProject
+    ? <DeploymentStatusPage project={deploymentProject} />
+    : <PortfolioHome />;
 }
