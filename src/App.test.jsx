@@ -4,7 +4,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { App } from "./App.jsx";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.history.replaceState({}, "", "/");
+});
 
 describe("Liang Weiye Agent landing page", () => {
   it("presents the approved recruiter-facing identity", () => {
@@ -260,6 +263,9 @@ describe("Liang Weiye Agent landing page", () => {
 
     expect(screen.getByText("简历助手与 AI 面试官的完整 Agentic Loop")).toBeVisible();
     expect(screen.getByRole("link", { name: "查看 CareerForge-AI 源码" })).toBeVisible();
+    expect(screen.getByText("真实使用反馈")).toBeVisible();
+    expect(screen.getByText(/原简历因表格化布局、信息缺失和重点不清/)).toBeVisible();
+    expect(screen.getByText(/随后通过辅导员内部推荐进入公司实习/)).toBeVisible();
   });
 
   it("shows concrete responsibility and team contribution in project details", async () => {
@@ -274,7 +280,19 @@ describe("Liang Weiye Agent landing page", () => {
 
     await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
     expect(screen.getByText(/我负责 AI 面试官核心模块/)).not.toBeVisible();
-    expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
+  });
+
+  it("uses an auditable service outcome instead of unsupported percentages", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
+
+    const project = screen
+      .getByRole("button", { name: "收起 多智能体客服 项目详情" })
+      .closest("article");
+    expect.soft(within(project).queryByText(/分类—路由—专业 Agent—SSE 回传/)).toBeVisible();
+    expect(project).not.toHaveTextContent(/70%|95%/);
   });
 
   describe("routes project experience and source actions to their configured destinations", () => {
@@ -289,7 +307,7 @@ describe("Liang Weiye Agent landing page", () => {
       expect(experience).not.toHaveAttribute("target");
 
       const source = screen.getByRole("link", { name: "查看 CareerForge-AI 源码" });
-      expect(source).toHaveAttribute("href", "https://github.com/Dloading666/CareerForge-AI");
+      expect(source).toHaveAttribute("href", "https://github.com/lwxiaoye/CareerForge-AI");
       expect(source).toHaveAttribute("target", "_blank");
       expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
     });
@@ -297,29 +315,15 @@ describe("Liang Weiye Agent landing page", () => {
     it.each([
       {
         project: "多智能体客服",
-        action: "前往体验",
-        accessibleName: "前往体验 多智能体客服",
-        href: "https://github.com/lwxiaoye/Agent-",
-      },
-      {
-        project: "多智能体客服",
-        action: "查看源码",
-        accessibleName: "查看 多智能体客服 源码",
-        href: "https://github.com/lwxiaoye/Agent-",
+        experienceHref: "/service/",
+        sourceHref: "https://github.com/lwxiaoye/Agent-",
       },
       {
         project: "医疗 RAG",
-        action: "前往体验",
-        accessibleName: "前往体验 医疗 RAG",
-        href: "https://github.com/lwxiaoye/medical-RAG-",
+        experienceHref: "/medical/",
+        sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
       },
-      {
-        project: "医疗 RAG",
-        action: "查看源码",
-        accessibleName: "查看 医疗 RAG 源码",
-        href: "https://github.com/lwxiaoye/medical-RAG-",
-      },
-    ])("routes $project $action to its configured external destination", async (testCase) => {
+    ])("routes $project experience internally and source externally", async (testCase) => {
       const user = userEvent.setup();
       render(<App />);
 
@@ -327,10 +331,14 @@ describe("Liang Weiye Agent landing page", () => {
         screen.getByRole("button", { name: `展开 ${testCase.project} 项目详情` }),
       );
 
-      const action = screen.getByRole("link", { name: testCase.accessibleName });
-      expect(action).toHaveAttribute("href", testCase.href);
-      expect(action).toHaveAttribute("target", "_blank");
-      expect((action.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+      const experience = screen.getByRole("link", { name: `前往体验 ${testCase.project}` });
+      expect(experience).toHaveAttribute("href", testCase.experienceHref);
+      expect(experience).not.toHaveAttribute("target");
+
+      const source = screen.getByRole("link", { name: `查看 ${testCase.project} 源码` });
+      expect(source).toHaveAttribute("href", testCase.sourceHref);
+      expect(source).toHaveAttribute("target", "_blank");
+      expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
     });
   });
 
