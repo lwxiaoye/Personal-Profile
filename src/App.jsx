@@ -351,6 +351,12 @@ function ProjectRow({ project, open, onToggle }) {
         <div className="project-responsibility">
           <span className="detail-label">项目与职责</span>
           <p>{project.responsibility}</p>
+          {project.userFeedback && (
+            <aside className="project-feedback" aria-label={`${project.title} 真实使用反馈`}>
+              <span className="detail-label">真实使用反馈</span>
+              <blockquote>{project.userFeedback}</blockquote>
+            </aside>
+          )}
         </div>
         <div className="project-highlights">
           <span className="detail-label">关键实现</span>

@@ -61,7 +61,7 @@ export const insights = {
   },
   verify: {
     kicker: "RESULT / VERIFIED",
-    primary: "约 95% 意图识别 · 团队交付",
+    primary: "Agent 链路闭环 · 团队交付",
     secondary: "能独立接住一条 Agent 功能链路",
   },
 };
@@ -80,7 +80,7 @@ export const experienceProjects = [
     period: "2026.02.15 — 2026.04.29",
     role: "Agent 应用开发 · 团队项目",
     description:
-      "从零搭建 LangGraph 工作流，负责意图分类、动态路由、专业 Agent 调度与 SSE 流式输出；针对不稳定分类结果增加规范化处理，最终将意图识别稳定在约 95%。",
+      "从零搭建 LangGraph 工作流，负责意图分类、动态路由、专业 Agent 调度与 SSE 流式输出；为多行、夹标点和中英文混排的分类结果增加规范化与兜底处理。",
     proof: "LangGraph 路由 / RAG / SSE / 团队协作",
   },
 ];
@@ -96,6 +96,8 @@ export const projects = [
     summary: "简历助手与 AI 面试官的完整 Agentic Loop",
     responsibility:
       "我负责 AI 面试官核心模块，也补齐了简历助手的关键链路。目标不是让模型“给建议”，而是让它能读取、修改、撤销和导出真实简历，并围绕目标岗位完成多轮面试。",
+    userFeedback:
+      "一位同学的原简历因表格化布局、信息缺失和重点不清，被辅导员指出存在较大问题。使用 CareerForge 补充关键信息并重新组织内容后，他反馈填写过程方便，生成的简历更加完整、重点更清晰；随后通过辅导员内部推荐进入公司实习。",
     highlights: [
       "把简历读取、局部更新、写前快照和 PDF 导出封装成受约束工具，由后端 Harness 统一校验。",
       "设计简历驱动提问、逐轮追问、6 维评分和报告生成；模型异常时走兜底，不让一次错误中断面试。",
@@ -105,7 +107,7 @@ export const projects = [
       "能独立接住一条 AI 功能链路，从需求、架构和 Prompt，一直做到接口、前端反馈与异常处理。",
     stack: "React / TypeScript / FastAPI / MySQL / Redis / SSE",
     livePath: "/career/",
-    sourceHref: "https://github.com/Dloading666/CareerForge-AI",
+    sourceHref: "https://github.com/lwxiaoye/CareerForge-AI",
   },
   {
     id: "service",
@@ -114,16 +116,16 @@ export const projects = [
     label: "调度中心 + 专业 Agent",
     summary: "把不稳定的分类输出变成可维护、可扩展的业务路由",
     responsibility:
-      "我从零搭建工作流，用显式状态图组织分类、路由和回复生成。针对分类结果多行、夹标点和中英混排的问题补了规范化层，把意图识别从约 70% 提升到约 95%。",
+      "我从零搭建工作流，用显式状态图组织分类、路由和回复生成。针对分类结果多行、夹标点和中英文混排的问题补了规范化层，让分类结果能稳定进入后续路由。",
     highlights: [
-      "用 StateGraph 和条件边组织分类、路由、专业 Agent 处理与回复生成。",
+      "用 StateGraph 和条件边完成“分类—路由—专业 Agent—SSE 回传”闭环。",
       "越界、闲聊和违法意图直接短路，不进入业务 Agent。",
       "把同步等待改为 SSE 流式输出，并补齐移动端和前端容灾边界。",
     ],
     contribution:
       "能设计可读、可调试、可增量扩展的 Agent 工作流，并处理真实生产边界。",
     stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
-    livePath: "https://github.com/lwxiaoye/Agent-",
+    livePath: "/service/",
     sourceHref: "https://github.com/lwxiaoye/Agent-",
   },
   {
@@ -141,7 +143,7 @@ export const projects = [
     ],
     contribution: "能把检索、评测、回退和业务接口组成完整闭环。",
     stack: "FastAPI / LangGraph / Milvus / BM25 / PostgreSQL / Docker",
-    livePath: "https://github.com/lwxiaoye/medical-RAG-",
+    livePath: "/medical/",
     sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
   },
 ];
@@ -156,7 +158,7 @@ export const capabilities = [
     stack: "LangGraph · LangChain · SSE",
     description: "把意图分类、业务路由、专业 Agent 调用和回复生成拆成显式节点，避免一条 Prompt 承担整条流程。",
     methods: ["StateGraph 条件路由", "分类结果规范化", "Checkpoint 会话恢复"],
-    proof: "多智能体客服｜意图识别由约 70% 提升至约 95%，完成“分类—路由—专业 Agent—SSE 回传”链路。",
+    proof: "多智能体客服｜完成“分类—路由—专业 Agent—SSE 回传”闭环，并通过规范化层处理多行、夹标点和中英文混排导致的路由偏差。",
     projectIds: ["service"],
   },
   {
