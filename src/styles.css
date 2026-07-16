@@ -2669,7 +2669,7 @@ a:focus-visible {
   }
 
   .deployment-orbit-frame {
-    width: min(92vw, 380px);
+    width: min(100%, 380px);
   }
 
   .deployment-meta {
