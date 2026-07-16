@@ -9,6 +9,11 @@ afterEach(() => {
   window.history.replaceState({}, "", "/");
 });
 
+function renderAt(pathname) {
+  window.history.replaceState({}, "", pathname);
+  return render(<App />);
+}
+
 describe("Liang Weiye Agent landing page", () => {
   it("presents the approved recruiter-facing identity", () => {
     render(<App />);
@@ -339,6 +344,41 @@ describe("Liang Weiye Agent landing page", () => {
       expect(source).toHaveAttribute("href", testCase.sourceHref);
       expect(source).toHaveAttribute("target", "_blank");
       expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+    });
+  });
+
+  describe("project deployment status routes", () => {
+    it.each([
+      {
+        pathname: "/service/",
+        title: "多智能体客服正在部署中",
+        stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
+        sourceHref: "https://github.com/lwxiaoye/Agent-",
+      },
+      {
+        pathname: "/medical/",
+        title: "医疗 RAG 正在部署中",
+        stack: "RAG / Hybrid Search / RRF / Milvus / FastAPI",
+        sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
+      },
+    ])("renders an honest deployment page at $pathname", (testCase) => {
+      renderAt(testCase.pathname);
+
+      expect(screen.getByRole("heading", { level: 1, name: testCase.title })).toBeVisible();
+      expect(screen.getByText(/线上环境配置与稳定性验证/)).toBeVisible();
+      expect(screen.getByText(testCase.stack)).toBeVisible();
+      expect(screen.getByRole("img", { name: /Agent 三轨道标志/ })).toHaveAttribute(
+        "src",
+        "/agent-orbit-favicon-master.png",
+      );
+      expect(screen.getByRole("link", { name: "查看源码" })).toHaveAttribute(
+        "href",
+        testCase.sourceHref,
+      );
+      for (const link of screen.getAllByRole("link", { name: "返回作品集" })) {
+        expect(link).toHaveAttribute("href", "/");
+      }
+      expect(screen.queryByRole("heading", { name: "代表项目" })).not.toBeInTheDocument();
     });
   });
 
