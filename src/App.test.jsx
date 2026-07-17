@@ -4,7 +4,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { App } from "./App.jsx";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.history.replaceState({}, "", "/");
+});
+
+function renderAt(pathname) {
+  window.history.replaceState({}, "", pathname);
+  return render(<App />);
+}
 
 describe("Liang Weiye Agent landing page", () => {
   it("presents the approved recruiter-facing identity", () => {
@@ -260,6 +268,9 @@ describe("Liang Weiye Agent landing page", () => {
 
     expect(screen.getByText("简历助手与 AI 面试官的完整 Agentic Loop")).toBeVisible();
     expect(screen.getByRole("link", { name: "查看 CareerForge-AI 源码" })).toBeVisible();
+    expect(screen.getByText("真实使用反馈")).toBeVisible();
+    expect(screen.getByText(/原简历因表格化布局、信息缺失和重点不清/)).toBeVisible();
+    expect(screen.getByText(/随后通过辅导员内部推荐进入公司实习/)).toBeVisible();
   });
 
   it("shows concrete responsibility and team contribution in project details", async () => {
@@ -274,18 +285,101 @@ describe("Liang Weiye Agent landing page", () => {
 
     await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
     expect(screen.getByText(/我负责 AI 面试官核心模块/)).not.toBeVisible();
-    expect(screen.getByText(/约 70% 提升到约 95%/)).toBeVisible();
   });
 
-  it("does not expose fake live links before deployment paths are supplied", async () => {
+  it("uses an auditable service outcome instead of unsupported percentages", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const trigger = screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" });
-    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "展开 多智能体客服 项目详情" }));
 
-    expect(within(trigger.closest("article")).getByText("部署地址待提供")).toBeVisible();
-    expect(screen.queryByRole("link", { name: /在线体验 CareerForge-AI/ })).not.toBeInTheDocument();
+    const project = screen
+      .getByRole("button", { name: "收起 多智能体客服 项目详情" })
+      .closest("article");
+    expect.soft(within(project).queryByText(/分类—路由—专业 Agent—SSE 回传/)).toBeVisible();
+    expect(project).not.toHaveTextContent(/70%|95%/);
+  });
+
+  describe("routes project experience and source actions to their configured destinations", () => {
+    it("routes CareerForge experience internally and source externally", async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
+
+      const experience = screen.getByRole("link", { name: "前往体验 CareerForge-AI" });
+      expect(experience).toHaveAttribute("href", "/career/");
+      expect(experience).not.toHaveAttribute("target");
+
+      const source = screen.getByRole("link", { name: "查看 CareerForge-AI 源码" });
+      expect(source).toHaveAttribute("href", "https://github.com/lwxiaoye/CareerForge-AI");
+      expect(source).toHaveAttribute("target", "_blank");
+      expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+    });
+
+    it.each([
+      {
+        project: "多智能体客服",
+        experienceHref: "/service/",
+        sourceHref: "https://github.com/lwxiaoye/Agent-",
+      },
+      {
+        project: "医疗 RAG",
+        experienceHref: "/medical/",
+        sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
+      },
+    ])("routes $project experience internally and source externally", async (testCase) => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await user.click(
+        screen.getByRole("button", { name: `展开 ${testCase.project} 项目详情` }),
+      );
+
+      const experience = screen.getByRole("link", { name: `前往体验 ${testCase.project}` });
+      expect(experience).toHaveAttribute("href", testCase.experienceHref);
+      expect(experience).not.toHaveAttribute("target");
+
+      const source = screen.getByRole("link", { name: `查看 ${testCase.project} 源码` });
+      expect(source).toHaveAttribute("href", testCase.sourceHref);
+      expect(source).toHaveAttribute("target", "_blank");
+      expect((source.getAttribute("rel") ?? "").split(/\s+/)).toContain("noreferrer");
+    });
+  });
+
+  describe("project deployment status routes", () => {
+    it.each([
+      {
+        pathname: "/service/",
+        title: "多智能体客服正在部署中",
+        stack: "Python / LangGraph / LangChain / Flask / SSE / Docker",
+        sourceHref: "https://github.com/lwxiaoye/Agent-",
+      },
+      {
+        pathname: "/medical/",
+        title: "医疗 RAG 正在部署中",
+        stack: "RAG / Hybrid Search / RRF / Milvus / FastAPI",
+        sourceHref: "https://github.com/lwxiaoye/medical-RAG-",
+      },
+    ])("renders an honest deployment page at $pathname", (testCase) => {
+      renderAt(testCase.pathname);
+
+      expect(screen.getByRole("heading", { level: 1, name: testCase.title })).toBeVisible();
+      expect(screen.getByText(/线上环境配置与稳定性验证/)).toBeVisible();
+      expect(screen.getByText(testCase.stack)).toBeVisible();
+      expect(screen.getByRole("img", { name: /Agent 三轨道标志/ })).toHaveAttribute(
+        "src",
+        "/agent-orbit-favicon-master.png",
+      );
+      expect(screen.getByRole("link", { name: "查看源码" })).toHaveAttribute(
+        "href",
+        testCase.sourceHref,
+      );
+      for (const link of screen.getAllByRole("link", { name: "返回作品集" })) {
+        expect(link).toHaveAttribute("href", "/");
+      }
+      expect(screen.queryByRole("heading", { name: "代表项目" })).not.toBeInTheDocument();
+    });
   });
 
   it("tracks the insight mask directly inside the left hero area", () => {
@@ -393,14 +487,15 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByRole("button", { name: "关闭导航" })).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("uses the canonical GitHub profile and clearer availability copy", () => {
+  it("uses the canonical GitHub profile and collaboration-focused contact copy", () => {
     render(<App />);
 
     expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute(
       "href",
       "https://github.com/lwxiaoye",
     );
-    expect(screen.getByText("2027 届 · 重庆 · 可实习 / 可合作")).toBeVisible();
+    expect(screen.getByText("2027 届 · 重庆 · 项目协作 / 技术交流")).toBeVisible();
+    expect(screen.queryByText("2027 届 · 重庆 · 可实习 / 可合作")).not.toBeInTheDocument();
   });
 
   it("downloads the bundled resume without opening a fragile preview tab", () => {
@@ -417,7 +512,7 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByRole("link", { name: /下载 PDF 简历/ })).not.toHaveAttribute("target");
   });
 
-  it("shows the two confirmed school-enterprise projects and internship availability", () => {
+  it("shows the two confirmed school-enterprise projects and collaboration mode", () => {
     render(<App />);
 
     const experience = screen.getByRole("heading", { level: 2, name: "经历" }).closest("section");
@@ -426,9 +521,13 @@ describe("Liang Weiye Agent landing page", () => {
     expect(within(experience).getByText("2026.05.01 — 2026.06.04")).toBeVisible();
     expect(within(experience).getByRole("heading", { name: "多智能体客服" })).toBeVisible();
     expect(within(experience).getByText("2026.02.15 — 2026.04.29")).toBeVisible();
-    expect(within(experience).getByText("每周可出勤 5 天")).toBeVisible();
-    expect(within(experience).getByText("可实习 6 个月以上")).toBeVisible();
-    expect(within(experience).getByText("一周内到岗")).toBeVisible();
+    expect(within(experience).getByText("COLLABORATION MODE")).toBeVisible();
+    expect(within(experience).getByText("可持续参与项目协作")).toBeVisible();
+    expect(within(experience).getByText("保持稳定交付节奏")).toBeVisible();
+    expect(within(experience).getByText("可快速进入项目")).toBeVisible();
+    expect(within(experience).queryByText("INTERNSHIP AVAILABILITY")).not.toBeInTheDocument();
+    expect(within(experience).queryByText("每周可出勤 5 天")).not.toBeInTheDocument();
+    expect(within(experience).queryByText("可实习 6 个月以上")).not.toBeInTheDocument();
   });
 
   it("keeps the cursor insight mask empty, inverse, and smaller than the previous version", () => {

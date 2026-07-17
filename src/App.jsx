@@ -16,8 +16,9 @@ import {
   X,
 } from "@phosphor-icons/react";
 import {
-  availabilityFacts,
+  collaborationFacts,
   capabilities,
+  deploymentPages,
   experienceProjects,
   planetThemes,
   projects,
@@ -25,6 +26,7 @@ import {
   runtimeSegments,
   stages,
 } from "./portfolio-data.js";
+import { DeploymentStatusPage } from "./DeploymentStatusPage.jsx";
 
 const EMAIL = "lwxiaoye@163.com";
 const ORBIT_SIGNAL_COLOR = "#e54e37";
@@ -331,6 +333,8 @@ function AgentMap({ activeStage, onStageChange }) {
 }
 
 function ProjectRow({ project, open, onToggle }) {
+  const livePathIsExternal = /^https?:\/\//.test(project.livePath ?? "");
+
   return (
     <article className={`project-row ${open ? "is-open" : ""}`}>
       <button
@@ -349,6 +353,12 @@ function ProjectRow({ project, open, onToggle }) {
         <div className="project-responsibility">
           <span className="detail-label">项目与职责</span>
           <p>{project.responsibility}</p>
+          {project.userFeedback && (
+            <aside className="project-feedback" aria-label={`${project.title} 真实使用反馈`}>
+              <span className="detail-label">真实使用反馈</span>
+              <blockquote>{project.userFeedback}</blockquote>
+            </aside>
+          )}
         </div>
         <div className="project-highlights">
           <span className="detail-label">关键实现</span>
@@ -362,8 +372,13 @@ function ProjectRow({ project, open, onToggle }) {
           <small>{project.stack}</small>
           <div className="project-links">
             {project.livePath ? (
-              <a href={project.livePath} aria-label={`在线体验 ${project.title}`}>
-                在线体验 <ArrowUpRight weight="bold" />
+              <a
+                href={project.livePath}
+                target={livePathIsExternal ? "_blank" : undefined}
+                rel={livePathIsExternal ? "noreferrer" : undefined}
+                aria-label={`前往体验 ${project.title}`}
+              >
+                前往体验 <ArrowUpRight weight="bold" />
               </a>
             ) : (
               <span className="link-unavailable">部署地址待提供</span>
@@ -436,7 +451,7 @@ function CapabilityRow({ capability, open, onToggle, onOpenProject }) {
   );
 }
 
-export function App() {
+function PortfolioHome() {
   const [activeStage, setActiveStage] = useState("plan");
   const [openProject, setOpenProject] = useState("");
   const [openCapability, setOpenCapability] = useState("orchestration");
@@ -720,9 +735,9 @@ export function App() {
             </article>
           ))}
         </div>
-        <div className="availability-strip" aria-label="实习到岗信息">
-          <span>INTERNSHIP AVAILABILITY</span>
-          {availabilityFacts.map((fact) => <strong key={fact}>{fact}</strong>)}
+        <div className="availability-strip" aria-label="项目协作方式">
+          <span>COLLABORATION MODE</span>
+          {collaborationFacts.map((fact) => <strong key={fact}>{fact}</strong>)}
         </div>
       </section>
 
@@ -737,7 +752,7 @@ export function App() {
           <div className="contact-panel-top">
             <span>WORK WITH ME</span>
             <strong>Agent 应用开发</strong>
-            <p>2027 届 · 重庆 · 可实习 / 可合作</p>
+            <p>2027 届 · 重庆 · 项目协作 / 技术交流</p>
           </div>
           <div className="contact-actions">
             <button
@@ -764,4 +779,18 @@ export function App() {
       </footer>
     </main>
   );
+}
+
+function normalizePathname(pathname) {
+  if (pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "");
+}
+
+export function App() {
+  const pathname = normalizePathname(window.location.pathname);
+  const deploymentProject = deploymentPages[pathname];
+
+  return deploymentProject
+    ? <DeploymentStatusPage project={deploymentProject} />
+    : <PortfolioHome />;
 }
