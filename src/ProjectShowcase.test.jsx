@@ -26,10 +26,26 @@ it.each([
   window.history.replaceState({}, "", path);
   render(<App />);
   expect(screen.getByRole("heading", { level: 1, name: heading })).toBeVisible();
-  expect(screen.getByText("效果展示预览 · 场景流程示意，未连接业务服务")).toBeVisible();
+  expect(screen.getByText("项目界面与工程案例 · 实际运行截图")).toBeVisible();
   expect(screen.getAllByRole("listitem")).toHaveLength(4);
   expect(screen.getByRole("link", { name: /返回代表项目/ })).toHaveAttribute("href", "/#projects");
   expect(screen.getByRole("link", { name: /查看实习经历/ })).toHaveAttribute("href", "/#experience");
+});
+
+it.each([
+  ["/showcase/duxy-agent/", "业务技能", "/showcase/real/agent-skills.png"],
+  ["/showcase/duxy-hub/", "能力中央库", "/showcase/real/hub-catalog.png"],
+])("switches screenshot and its explanation together at %s", (path, tab, image) => {
+  window.history.replaceState({}, "", path);
+  render(<App />);
+  const button = screen.getByRole("button", { name: new RegExp(tab) });
+  fireEvent.click(button);
+  expect(button).toHaveAttribute("aria-pressed", "true");
+  const original = screen.getByRole("link", { name: /查看原图：/ });
+  expect(original).toHaveAttribute("href", image);
+  expect(original).toHaveAttribute("rel", "noopener noreferrer");
+  expect(screen.getByRole("heading", { name: "我负责的部分" })).toBeVisible();
+  expect(screen.getByText(/贡献数包含 GitHub/)).toBeVisible();
 });
 
 it("renders the CareerForge case at the destination advertised by its project link", () => {

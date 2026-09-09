@@ -1,0 +1,72 @@
+.showcase-page .case-context { display:grid; grid-template-columns: 1.7fr 1fr; gap:48px; margin:0 0 36px; align-items:end; }
+.showcase-page .case-context p { margin:0; font-size:17px; line-height:1.9; max-width:800px; }
+.showcase-page .case-context > span { font-size:12px; color:var(--muted); line-height:1.9; border-left:1px solid var(--line); padding-left:24px; }
+.showcase-page .case-metric-source { font-size:12px; color:var(--muted); line-height:1.8; }
+.showcase-page .case-gallery { padding:36px 0 58px; border-top:1px solid var(--ink); }
+.showcase-page .case-heading { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:30px; }
+.showcase-page .case-heading h2 { max-width:760px; font-size:clamp(25px,3vw,38px); line-height:1.4; margin-bottom:0; }
+.showcase-page .case-data-tag { flex-shrink:0; font-size:11px; border:1px solid var(--line); padding:9px 12px; color:var(--muted); }
+.showcase-page .case-gallery-tabs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); border-top:1px solid var(--line); }
+.showcase-page .case-gallery-tabs button { flex:1; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:20px; cursor:pointer; background:transparent; border:0; border-bottom:2px solid transparent; font:inherit; font-size:14px; color:var(--muted); }
+.showcase-page .case-gallery-tabs button span { font:11px monospace; }
+.showcase-page .case-gallery-tabs button[aria-pressed="true"] { color:var(--ink); background:#eae8e1; border-bottom-color:var(--red); }
+.showcase-page .case-gallery-tabs button:hover { color:var(--ink); }
+.showcase-page .case-figure { margin:0; }
+.showcase-page .case-image-link { display:block; position:relative; background:#eae8e1; padding:24px; border:1px solid #dddcd5; }
+.showcase-page .case-image-link img { display:block; width:100%; height:auto; border:1px solid #deded9; box-shadow:0 10px 30px #24251f0d; }
+.showcase-page .case-image-link > span { position:absolute; right:36px; bottom:36px; display:flex; align-items:center; gap:8px; background:var(--ink); color:white; padding:10px 14px; font-size:12px; }
+.showcase-page .case-figure figcaption { display:grid; grid-template-columns:1fr 1fr; gap:60px; padding:30px 0; }
+.showcase-page .case-figure h3 { font-size:23px; margin:10px 0 14px; line-height:1.5; }
+.showcase-page .case-figure p { font-size:15px; line-height:1.9; margin:10px 0 16px; }
+.showcase-page .case-figure small { display:block; font-size:12px; line-height:1.8; color:var(--muted); }
+.showcase-page .case-departments,.showcase-page .case-evaluation { border-top:1px solid var(--ink); padding:36px 0 52px; }
+.showcase-page .case-department-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; margin-top:32px; }
+.showcase-page .case-department-grid article { border-top:2px solid var(--red); padding-top:20px; }
+.showcase-page .case-department-grid article > span { font-size:11px; color:var(--muted); }
+.showcase-page .case-department-grid h3 { font-size:20px; line-height:1.5; }
+.showcase-page .case-department-grid p { font-size:14px; line-height:1.9; color:#454540; }
+.showcase-page .case-ownership { display:grid; grid-template-columns:1fr 1.7fr; gap:60px; padding:44px 36px; background:#20211e; color:#f7f6f0; margin:0 0 52px; }
+.showcase-page .case-ownership .detail-label { color:#c4c4b9; }
+.showcase-page .case-ownership p { color:#c7c8be; font-size:14px; line-height:1.9; }
+.showcase-page .case-ownership article { display:flex; gap:22px; padding:0 0 20px; }
+.showcase-page .case-ownership article + article { border-top:1px solid #484a42; padding-top:24px; }
+.showcase-page .case-ownership article > span { font:12px monospace; color:#ee876e; padding-top:5px; }
+.showcase-page .case-ownership h3 { font-size:20px; margin:0 0 10px; }
+.showcase-page .case-ownership article p { margin:0; }
+.showcase-page .case-evaluation > p { color:var(--muted); font-size:14px; line-height:1.8; }
+.showcase-page .case-evaluation-scroll { overflow-x:auto; }
+.showcase-page .case-evaluation table { border-collapse:collapse; width:100%; margin-top:24px; text-align:left; font-size:14px; line-height:1.8; }
+.showcase-page .case-evaluation th,.showcase-page .case-evaluation td { padding:20px 18px; border-bottom:1px solid var(--line); vertical-align:top; }
+.showcase-page .case-evaluation thead { background:#eeece5; font-size:12px; }
+.showcase-page .case-evaluation tbody th { width:24%; }
+.showcase-page .case-evaluation td:last-child { width:23%; font-size:12px; color:var(--muted); }
+.showcase-page .case-collaboration { display:grid; grid-template-columns:1fr 1.1fr; align-items:center; gap:54px; padding:42px 0 60px; border-top:1px solid var(--ink); }
+.showcase-page .case-collaboration p { font-size:14px; line-height:1.9; }
+.showcase-page .case-collaboration small { display:block; font-size:11px; line-height:1.8; color:var(--muted); }
+.showcase-page .case-collaboration a { margin-top:20px; font-size:13px; }
+.showcase-page .case-github-count { display:flex; align-items:center; gap:24px; }
+.showcase-page .case-github-count strong { font-size:54px; font-weight:500; letter-spacing:-3px; }
+.showcase-page .case-github-count span { font-size:12px; color:var(--muted); }
+.showcase-page .case-collaboration figure { margin:0; min-width:0; }
+.showcase-page .case-collaboration .case-github-crop { display:block; position:relative; width:100%; aspect-ratio:925/230; overflow:hidden; border:1px solid var(--line); background:white; }
+.showcase-page .case-github-crop img { position:absolute; width:207.567%; max-width:none; height:auto; left:-70.27%; top:-302.174%; }
+.showcase-page .case-collaboration figcaption { font-size:11px; color:var(--muted); margin-top:12px; }
+.showcase-page button:focus-visible,.showcase-page a:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
+@media(max-width:900px) {
+ .showcase-page .case-heading { align-items:start; flex-direction:column; }
+ .showcase-page .case-context,.showcase-page .case-ownership { grid-template-columns:1fr; gap:24px; }
+ .showcase-page .case-department-grid { gap:18px; }
+ .showcase-page .case-collaboration { grid-template-columns:1fr; gap:12px; }
+}
+@media(max-width:640px) {
+ .showcase-page .case-gallery-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .showcase-page .case-gallery-tabs button { padding:16px 12px; font-size:12px; gap:8px; flex:0 0 auto; min-width:116px; }
+ .showcase-page .case-gallery-tabs button svg { display:none; }
+ .showcase-page .case-image-link { padding:8px; }
+ .showcase-page .case-image-link > span { right:12px; bottom:12px; font-size:10px; padding:6px 9px; }
+ .showcase-page .case-figure figcaption,.showcase-page .case-department-grid { grid-template-columns:1fr; gap:22px; }
+ .showcase-page .case-figure h3 { font-size:21px; }
+ .showcase-page .case-ownership { padding:28px 20px; }
+ .showcase-page .case-evaluation table { min-width:560px; }
+ .showcase-page .case-evaluation th,.showcase-page .case-evaluation td { padding:14px 12px; }
+}
