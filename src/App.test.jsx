@@ -25,7 +25,7 @@ describe("Liang Weiye Agent landing page", () => {
     ).toBeVisible();
     expect(screen.getByText("AGENT APPLICATION ENGINEER")).toBeVisible();
     expect(screen.getByText("Agent 应用开发 · LangGraph · RAG · Harness Engineering")).toBeVisible();
-    expect(screen.getByText(/构建可追踪、可恢复、可评测的 Agent 系统/)).toBeVisible();
+    expect(screen.getByText(/在服装企业交付 AI 出图工作流、业务 Agent 与能力中枢/)).toBeVisible();
   });
 
   it("starts with the specified Plan step active and synchronized", () => {
@@ -239,15 +239,15 @@ describe("Liang Weiye Agent landing page", () => {
     expect(screen.getByRole("link", { name: /联系我/ })).toHaveAttribute("href", "#contact");
   });
 
-  it("replaces ambiguous metrics with evidence-oriented capabilities", () => {
+  it("presents candidate-confirmed internship outcomes in the hero", () => {
     render(<App />);
 
-    expect(screen.getByText("意图路由")).toBeVisible();
-    expect(screen.getByText("多场景任务分类")).toBeVisible();
-    expect(screen.getByText("知识检索")).toBeVisible();
-    expect(screen.getByText("混合检索与重排")).toBeVisible();
-    expect(screen.getByText("工具编排")).toBeVisible();
-    expect(screen.getByText("可追踪、可恢复、可评测")).toBeVisible();
+    expect(within(screen.getByRole("heading", { level: 1, name: "梁伟业" }).closest("section")).getByText("12 名")).toBeVisible();
+    expect(screen.getByText("美编实际使用")).toBeVisible();
+    expect(screen.getByText("约 200 张 / 日")).toBeVisible();
+    expect(screen.getByText("团队日常出图量")).toBeVisible();
+    expect(screen.getByText("耗时降低约 67%")).toBeVisible();
+    expect(screen.getByText("4K 典型出图 · 180 → 60 秒")).toBeVisible();
   });
 
   it("uses engineering status labels instead of fake live-task state", () => {
@@ -307,7 +307,7 @@ describe("Liang Weiye Agent landing page", () => {
 
       await user.click(screen.getByRole("button", { name: "展开 CareerForge-AI 项目详情" }));
 
-      const experience = screen.getByRole("link", { name: "前往体验 CareerForge-AI" });
+      const experience = screen.getByRole("link", { name: "查看案例 CareerForge-AI" });
       expect(experience).toHaveAttribute("href", "/career/");
       expect(experience).not.toHaveAttribute("target");
 
@@ -336,7 +336,7 @@ describe("Liang Weiye Agent landing page", () => {
         screen.getByRole("button", { name: `展开 ${testCase.project} 项目详情` }),
       );
 
-      const experience = screen.getByRole("link", { name: `前往体验 ${testCase.project}` });
+      const experience = screen.getByRole("link", { name: `部署说明 ${testCase.project}` });
       expect(experience).toHaveAttribute("href", testCase.experienceHref);
       expect(experience).not.toHaveAttribute("target");
 
@@ -424,7 +424,7 @@ describe("Liang Weiye Agent landing page", () => {
     expect(within(skills).getAllByRole("button", { name: /能力详情/ })).toHaveLength(4);
     expect(
       within(skills).getByText(
-        "我擅长的不只是接入模型，而是把 Agent 链路做到可编排、可评估、可恢复、可交付。",
+        "从任务编排、知识检索到受控执行与部署，结合具体项目说明实现方式。",
       ),
     ).toBeVisible();
     expect(

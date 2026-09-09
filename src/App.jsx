@@ -20,6 +20,7 @@ import {
   capabilities,
   deploymentPages,
   experienceProjects,
+  internship,
   planetThemes,
   projects,
   runtimeMapAux,
@@ -27,6 +28,8 @@ import {
   stages,
 } from "./portfolio-data.js";
 import { DeploymentStatusPage } from "./DeploymentStatusPage.jsx";
+import { ProjectShowcase } from "./ProjectShowcase.jsx";
+import { showcasePages } from "./showcase-data.js";
 
 const EMAIL = "lwxiaoye@163.com";
 const ORBIT_SIGNAL_COLOR = "#e54e37";
@@ -351,8 +354,9 @@ function ProjectRow({ project, open, onToggle }) {
       </button>
       <div className="project-detail" hidden={!open}>
         <div className="project-responsibility">
-          <span className="detail-label">项目与职责</span>
+          <span className="detail-label">{project.caseStudy ? "团队问题与我的职责" : "项目与职责"}</span>
           <p>{project.responsibility}</p>
+          {project.delivery && <div className="project-delivery"><span className="detail-label">交付节奏</span><p>{project.delivery}</p></div>}
           {project.userFeedback && (
             <aside className="project-feedback" aria-label={`${project.title} 真实使用反馈`}>
               <span className="detail-label">真实使用反馈</span>
@@ -361,14 +365,17 @@ function ProjectRow({ project, open, onToggle }) {
           )}
         </div>
         <div className="project-highlights">
-          <span className="detail-label">关键实现</span>
+          <span className="detail-label">{project.caseStudy ? "关键设计与实现" : "关键实现"}</span>
           <ul>
             {project.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
           </ul>
+          {project.ongoing && <aside className="project-ongoing"><h4>{project.ongoing.title}</h4><p>{project.ongoing.text}</p></aside>}
         </div>
         <div className="project-contribution">
-          <span className="detail-label">团队贡献</span>
+          <span className="detail-label">{project.metricsTitle ?? (project.caseStudy ? "交付成果" : "团队贡献")}</span>
+          {project.metrics && <dl className="project-metrics">{project.metrics.map(({ value, label }) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
           <strong>{project.contribution}</strong>
+          {project.metricNote && <p className="project-metric-note">{project.metricNote}</p>}
           <small>{project.stack}</small>
           <div className="project-links">
             {project.livePath ? (
@@ -376,12 +383,12 @@ function ProjectRow({ project, open, onToggle }) {
                 href={project.livePath}
                 target={livePathIsExternal ? "_blank" : undefined}
                 rel={livePathIsExternal ? "noreferrer" : undefined}
-                aria-label={`前往体验 ${project.title}`}
+                aria-label={`${project.liveLabel ?? "前往体验"} ${project.title}`}
               >
-                前往体验 <ArrowUpRight weight="bold" />
+                {project.liveLabel ?? "前往体验"} <ArrowUpRight weight="bold" />
               </a>
             ) : (
-              <span className="link-unavailable">部署地址待提供</span>
+              <span className="link-unavailable">{project.accessLabel ?? "部署地址待提供"}</span>
             )}
             {project.sourceHref && (
               <a
@@ -393,6 +400,7 @@ function ProjectRow({ project, open, onToggle }) {
                 查看源码 <ArrowUpRight weight="bold" />
               </a>
             )}
+            {project.showcaseHref && <a className="project-showcase-link" href={project.showcaseHref} target="_blank" rel="noopener noreferrer" aria-label={`效果展示：${project.title}（新标签页）`}>效果展示 <ArrowUpRight weight="bold" /></a>}
           </div>
         </div>
       </div>
@@ -453,7 +461,7 @@ function CapabilityRow({ capability, open, onToggle, onOpenProject }) {
 
 function PortfolioHome() {
   const [activeStage, setActiveStage] = useState("plan");
-  const [openProject, setOpenProject] = useState("");
+  const [openProject, setOpenProject] = useState("duxy-agent");
   const [openCapability, setOpenCapability] = useState("orchestration");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
@@ -614,7 +622,7 @@ function PortfolioHome() {
           </div>
           <div className="hero-zone hero-stack" onMouseEnter={() => selectStage("decide", 2600)}>
             <p>Agent 应用开发 · LangGraph · RAG · Harness Engineering</p>
-            <small>从意图路由、知识检索到工具编排，构建可追踪、可恢复、可评测的 Agent 系统。</small>
+            <small>在服装企业交付 AI 出图工作流、业务 Agent 与能力中枢，把模型能力落到团队每天使用的工具里。</small>
           </div>
           <div className="hero-actions" onMouseEnter={() => selectStage("tools", 2600)}>
             <a className="primary-button" href="#projects">
@@ -632,9 +640,9 @@ function PortfolioHome() {
             </a>
           </div>
           <div className="hero-metrics" onMouseEnter={() => selectStage("verify", 2600)}>
-            <div><strong>意图路由</strong><span>多场景任务分类</span></div>
-            <div><strong>知识检索</strong><span>混合检索与重排</span></div>
-            <div><strong>工具编排</strong><span>可追踪、可恢复、可评测</span></div>
+            <div><strong>12 名</strong><span>美编实际使用</span></div>
+            <div><strong>约 200 张 / 日</strong><span>团队日常出图量</span></div>
+            <div><strong>耗时降低约 67%</strong><span>4K 典型出图 · 180 → 60 秒</span></div>
           </div>
           <div
             ref={insightMaskRef}
@@ -663,7 +671,7 @@ function PortfolioHome() {
       <section className="projects section" id="projects">
         <div className="section-heading">
           <div><span className="section-index">/ 01</span><h2>代表项目</h2></div>
-          <p>从真实业务出发，构建可落地、可追踪、可验证的 Agent 应用。</p>
+          <p>工作台承接服装业务任务，中枢提供共享能力与执行治理。以下展示我的职责、关键实现与交付结果。</p>
         </div>
         <div className="project-list">
           {projects.map((project) => (
@@ -684,8 +692,8 @@ function PortfolioHome() {
         <div className="about-grid">
           <p className="about-lead">我关注的不是模型能说什么，而是它如何在真实业务里稳定地完成一件事。</p>
           <div className="about-copy">
-            <p>软件工程本科在读，长期投入 Agent 应用开发。遇到不熟悉的问题，我习惯先查资料、做验证，再把可行方案落进完整产品链路。</p>
-            <p>从需求理解、架构设计到前后端联调与异常兜底，我希望负责的不只是一个功能，而是它能否真正被使用。</p>
+            <p>重庆工程学院软件工程本科在读，2027 届。在重庆独小漾服装有限公司担任 AI 工程师实习生，负责 AI 出图、业务 Agent、能力中枢与服务器部署。</p>
+            <p>从美编的出图效率出发，逐步完成工作流优化、应用开发与基础设施搭建。我擅长把需求拆解成可执行链路，再通过联调、验证与迭代完成交付。</p>
           </div>
         </div>
       </section>
@@ -693,7 +701,7 @@ function PortfolioHome() {
       <section className="skills section" id="skills">
         <div className="section-heading">
           <div><span className="section-index">/ 03</span><h2>技术能力</h2></div>
-          <p>我擅长的不只是接入模型，而是把 Agent 链路做到可编排、可评估、可恢复、可交付。</p>
+          <p>从任务编排、知识检索到受控执行与部署，结合具体项目说明实现方式。</p>
         </div>
         <div className="capability-list">
           {capabilities.map((capability) => (
@@ -711,8 +719,24 @@ function PortfolioHome() {
       <section className="experience section" id="experience">
         <div className="section-heading">
           <div><span className="section-index">/ 04</span><h2>经历</h2></div>
-          <p>两段校企合作项目都在团队协作中完成，覆盖 Agent 工作流、知识检索、工具调用和前后端联调。</p>
+          <p>企业实习与校企项目，覆盖 AI 出图提效、Agent 应用、能力中枢及部署交付。</p>
         </div>
+        <article className="internship-card" aria-label="重庆独小漾服装有限公司实习经历">
+          <div className="internship-heading">
+            <div>
+              <span className="detail-label">INDUSTRY EXPERIENCE</span>
+              <h3>{internship.company}</h3>
+              <strong>{internship.role}</strong>
+            </div>
+            <p>{internship.period}</p>
+          </div>
+          <p className="internship-summary">{internship.summary}</p>
+          <ul className="internship-achievements">
+            {internship.achievements.map((item) => (
+              <li key={item.title}><strong>{item.title}</strong><p>{item.text}</p></li>
+            ))}
+          </ul>
+        </article>
         <div className="experience-base">
           <div>
             <span className="detail-label">SCHOOL–ENTERPRISE BASE</span>
@@ -789,6 +813,9 @@ function normalizePathname(pathname) {
 export function App() {
   const pathname = normalizePathname(window.location.pathname);
   const deploymentProject = deploymentPages[pathname];
+  const showcase = showcasePages[pathname];
+
+  if (showcase) return <ProjectShowcase showcase={showcase} project={projects.find((project) => project.id === showcase.projectId)} />;
 
   return deploymentProject
     ? <DeploymentStatusPage project={deploymentProject} />

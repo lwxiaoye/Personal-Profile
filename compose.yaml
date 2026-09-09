@@ -1,0 +1,10 @@
+name: personal-profile
+
+services:
+  website:
+    container_name: Personal-Profile
+    image: personal-profile:local
+    build: .
+    ports:
+      - "127.0.0.1:8078:80"
+    restart: unless-stopped
