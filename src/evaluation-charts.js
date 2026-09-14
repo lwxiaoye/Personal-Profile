@@ -5,7 +5,7 @@ export const evaluationCharts = [
     "note": "各项来自不同样本集，不能理解为时间趋势；回答项为草稿自动规则判分，场景项为接口与路由检查，恢复项未实际重启服务。"
   },
   {
-    "src": "/showcase/metrics/hit5.png",
+    "src": "/showcase/metrics/hit5.png?v=20260914-stratified",
     "title": "Hit@5 检索命中",
     "note": "自然题 140/150，分层题 534/650。管理员按知识空间检索后合并结果，以金标文档是否出现在 Top 5 中判定。"
   },
