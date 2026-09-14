@@ -21,11 +21,11 @@ describe("Liang Weiye Agent landing page", () => {
     expect(document.title).toBe("梁伟业｜Agent 应用开发");
     expect(screen.getByRole("heading", { level: 1, name: "梁伟业" })).toBeVisible();
     expect(
-      screen.getByRole("heading", { level: 2, name: "把 Agent 从 Demo 做到可交付产品" }),
+      screen.getByRole("heading", { level: 2, name: "让 Agent 进入业务，让工程产生实效" }),
     ).toBeVisible();
     expect(screen.getByText("AGENT APPLICATION ENGINEER")).toBeVisible();
     expect(screen.getByText("Agent 应用开发 · LangGraph · RAG · Harness Engineering")).toBeVisible();
-    expect(screen.getByText(/在服装企业交付 AI 出图工作流、业务 Agent 与能力中枢/)).toBeVisible();
+    expect(screen.getByText(/在服装企业负责 RAG、ComfyUI、沙箱治理与能力中枢/)).toBeVisible();
   });
 
   it("starts with the specified Plan step active and synchronized", () => {
@@ -242,12 +242,13 @@ describe("Liang Weiye Agent landing page", () => {
   it("presents candidate-confirmed internship outcomes in the hero", () => {
     render(<App />);
 
-    expect(within(screen.getByRole("heading", { level: 1, name: "梁伟业" }).closest("section")).getByText("12 名")).toBeVisible();
-    expect(screen.getByText("美编实际使用")).toBeVisible();
-    expect(screen.getByText("约 200 张 / 日")).toBeVisible();
-    expect(screen.getByText("团队日常出图量")).toBeVisible();
-    expect(screen.getByText("耗时降低约 67%")).toBeVisible();
-    expect(screen.getByText("4K 典型出图 · 180 → 60 秒")).toBeVisible();
+    const hero = within(screen.getByRole("heading", { level: 1, name: "梁伟业" }).closest("section"));
+    expect(hero.getByText("78 人")).toBeVisible();
+    expect(hero.getByText("企业平台实际使用")).toBeVisible();
+    expect(hero.getByText("220 → 72 秒")).toBeVisible();
+    expect(hero.getByText("美编出图耗时")).toBeVisible();
+    expect(hero.getByText("减少约 67%")).toBeVisible();
+    expect(hero.getByText("出图流程优化成效")).toBeVisible();
   });
 
   it("uses engineering status labels instead of fake live-task state", () => {

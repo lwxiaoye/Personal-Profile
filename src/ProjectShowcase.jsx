@@ -1,6 +1,9 @@
+import { evaluationCharts } from "./evaluation-charts.js";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react";
 import { showcaseEvidence } from "./showcase-evidence.js";
+import { evaluationData } from "./evaluation-data.js";
+import { internship } from "./portfolio-data.js";
 import "./showcase.css";
 
 function ScreenshotGallery({ evidence }) {
@@ -11,22 +14,37 @@ function ScreenshotGallery({ evidence }) {
     <div className="case-gallery-tabs" aria-label="选择展示界面">{evidence.images.map((item, i) => <button type="button" key={item.src} aria-pressed={selected === i} onClick={() => setSelected(i)}><span>0{i + 1}</span>{item.tab}<ArrowUpRight /></button>)}</div>
     <figure className="case-figure">
       <a className="case-image-link" href={shot.src} target="_blank" rel="noopener noreferrer" aria-label={`查看原图：${shot.title}（新标签页）`}><img src={shot.src} alt={shot.alt} width="1920" height="919" /><span>查看原图 <ArrowUpRight /></span></a>
-      <figcaption><div><span className="detail-label">0{selected + 1} / {shot.tab}</span><h3>{shot.title}</h3><p>{shot.text}</p></div><div><span className="detail-label">我的实现</span><p>{shot.contribution}</p><small>{shot.note}</small></div></figcaption>
+      <figcaption><div><span className="detail-label">0{selected + 1} / {shot.tab}</span><h3>{shot.title}</h3><p>{shot.text}</p></div><div><span className="detail-label">我的实现</span><p>{shot.contribution}</p></div></figcaption>
     </figure>
   </section>;
 }
 
 function CaseEvidence({ evidence }) {
   return <>
+    <section className="case-evaluation"><span className="detail-label">PROJECT / 项目介绍与技术架构</span><h2>DUYG 独小漾｜服装研发多模态 Agent 与能力协同平台</h2><p>{evaluationData.intro}</p><h3>技术架构</h3><p>{evaluationData.architecture}</p></section>
     <section className="case-departments" aria-labelledby="case-departments-title"><span className="detail-label">USE CASES / 部门用途</span><h2 id="case-departments-title">放到具体工作里，解决什么问题</h2><div className="case-department-grid">{evidence.departments.map(item => <article key={item.name}><span>{item.name}</span><h3>{item.task}</h3><p>{item.value}</p></article>)}</div></section>
-    <section className="case-ownership" aria-labelledby="case-ownership-title"><div><span className="detail-label">OWNERSHIP / 个人贡献</span><h2 id="case-ownership-title">我负责的部分</h2><p>重庆独小漾服装有限公司<br />AI 工程师 · 2026.06.07—2026.09.09</p></div><div>{evidence.ownership.map((item,i) => <article key={item.title}><span>0{i+1}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></article>)}</div></section>
+    <section className="case-ownership" aria-labelledby="case-ownership-title"><div><span className="detail-label">OWNERSHIP / 个人贡献</span><h2 id="case-ownership-title">我负责的部分</h2><p>{internship.company}<br />{internship.role} · {internship.period}</p></div><div>{evidence.ownership.map((item,i) => <article key={item.title}><span>0{i+1}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></article>)}</div></section>
   </>;
+}
+
+function EvaluationCharts() {
+  const [selected, setSelected] = useState(0);
+  const chart = evaluationCharts[selected];
+  return <section className="case-gallery" id="evaluation-charts" aria-labelledby="evaluation-charts-title">
+    <div className="case-heading"><div><span className="detail-label">BENCHMARK / 评测图表</span><h2 id="evaluation-charts-title">用图表查看评测结果</h2></div><span className="case-data-tag">2026-09-14 · 8 张图表</span></div>
+    <div className="case-gallery-tabs" aria-label="选择评测图表">{evaluationCharts.map((item, index) => <button type="button" key={item.src} aria-pressed={selected === index} onClick={() => setSelected(index)}>{item.title}</button>)}</div>
+    <figure className="case-figure">
+      <figcaption><div><span className="detail-label">{selected + 1} / 8</span><h3>{chart.title}</h3></div><div><span className="detail-label">评测口径</span><p>{chart.note}</p></div></figcaption>
+      <a className="case-image-link" href={chart.src} target="_blank" rel="noopener noreferrer" aria-label={`打开评测原图：${chart.title}（新标签页）`}><img src={chart.src} alt={`${chart.title}，2026 年 9 月 14 日跑批图表；具体判分范围见上方说明`} width="1200" height="680" loading="lazy" /><span>打开原图 <ArrowUpRight /></span></a>
+    </figure>
+  </section>;
 }
 
 function DevelopmentEvidence({ evidence }) {
   return <>
-    <section className="case-evaluation" aria-labelledby="case-evaluation-title"><span className="detail-label">EVALUATION / 验收口径</span><h2 id="case-evaluation-title">把效果落实到可复查的指标</h2><p>典型耗时、配置规模和评测结果分别记录。以下注明了已有依据及后续统计方法。</p><div className="case-evaluation-scroll"><table><thead><tr><th>指标</th><th>统计方式</th><th>依据 / 状态</th></tr></thead><tbody>{evidence.evaluation.map(item => <tr key={item.metric}><th scope="row">{item.metric}</th><td>{item.method}</td><td>{item.status}</td></tr>)}</tbody></table></div></section>
-    <section className="case-collaboration" aria-labelledby="case-collaboration-title"><div><span className="detail-label">DEVELOPMENT / 持续开发</span><h2 id="case-collaboration-title">从业务需求到代码交付</h2><p>围绕美编需求推进工作流迭代，负责业务前端与后端接口联调，并承担服务器部署。用具体任务、接口和交付结果说明自己的职责。</p><p className="case-github-count"><strong>397</strong><span>过去一年 GitHub contributions<br />用户提供的个人主页截图</span></p><small>贡献数包含 GitHub 认定的不同活动，不等同于代码提交数或团队人数。</small><a href="https://github.com/lwxiaoye" target="_blank" rel="noopener noreferrer">查看 GitHub 主页 <ArrowUpRight /></a></div><figure><a className="case-github-crop" href="/showcase/github-contributions.png" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 贡献截图原图"><img src="/showcase/github-contributions.png" alt="lwxiaoye GitHub 个人主页截图：过去一年 397 次贡献" loading="lazy" width="1920" height="1080" /></a><figcaption>持续开发记录 · 2026 年个人主页截图</figcaption></figure></section>
+    <section className="case-evaluation" aria-labelledby="case-evaluation-title"><span className="detail-label">EVALUATION / 验收口径</span><h2 id="case-evaluation-title">把效果落实到可复查的指标</h2><p>评测日期：2026-09-14。业务记录与本机跑批分别展示；保留样本数、判分方式及验证边界。</p><div className="case-evaluation-scroll"><table><thead><tr><th>指标</th><th>结果</th><th>统计方式</th><th>依据 / 状态</th></tr></thead><tbody>{evidence.evaluation.map(item => <tr key={item.metric}><th scope="row">{item.metric}</th><td><strong>{item.result}</strong></td><td>{item.method}</td><td>{item.status}</td></tr>)}</tbody></table></div></section>
+    <EvaluationCharts />
+    <section className="case-collaboration" aria-labelledby="case-collaboration-title"><div><span className="detail-label">DEVELOPMENT / 持续开发</span><h2 id="case-collaboration-title">从业务需求到代码交付</h2><p>围绕美编需求推进工作流迭代，负责业务前端与后端接口联调，并承担服务器部署。用具体任务、接口和交付结果说明自己的职责。</p><p className="case-github-count"><strong>435</strong><span>过去一年 GitHub contributions<br />用户提供的个人主页截图</span></p><small>贡献数包含 GitHub 认定的不同活动，不等同于代码提交数或团队人数。</small><a href="https://github.com/lwxiaoye" target="_blank" rel="noopener noreferrer">查看 GitHub 主页 <ArrowUpRight /></a></div><figure><a className="case-github-crop" href="/showcase/github-contributions.png" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 贡献截图原图"><img src="/showcase/github-contributions.png" alt="lwxiaoye GitHub 个人主页截图：过去一年 435 次贡献" loading="lazy" width="1920" height="919" /></a><figcaption>持续开发记录 · 2026 年个人主页截图</figcaption></figure></section>
   </>;
 }
 

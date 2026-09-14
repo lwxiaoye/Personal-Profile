@@ -1,3 +1,4 @@
+import { evaluationData } from "./evaluation-data.js";
 export const planetThemes = {
   mercury: { highlight: "#F2F4F4", base: "#A9AFB1", mid: "#71797C", shadow: "#343A3D", glow: "#9CA9AF", texture: "rock" },
   venus: { highlight: "#FFF3CF", base: "#D9B66E", mid: "#B48A45", shadow: "#66502F", glow: "#D8B874", texture: "cloud" },
@@ -67,39 +68,18 @@ export const insights = {
 };
 
 export const internship = {
-  company: "重庆独小漾服装有限公司",
-  role: "AI 工程师 · 实习",
-  period: "2026.06.07 — 2026.09.09",
-  summary: "负责服装业务 AI 应用开发与运行环境建设：前 1–2 周搭建并迭代出图工作流，第 3 周启动 Agent 工作台，随后建设共享能力中枢，持续推进执行治理。",
-  achievements: [
-    {
-      title: "出图提效",
-      text: "为 12 名美编搭建并迭代 ComfyUI 工作流与图像 API 调用链路，支撑团队日均约 200 张图的生成需求；在同显卡、4K 场景下，将典型单次出图耗时由约 180 秒缩短至约 60 秒，降低约 67%。",
-    },
-    {
-      title: "业务 Agent",
-      text: "建设服装业务 Agent 工作台，以显式路由连接 ComfyUI 与图像 API；实现任务持久化、终态保护、已有任务恢复与账号级资产归档，处理长耗时生成任务的状态衔接。",
-    },
-    {
-      title: "能力中枢",
-      text: "为工作台建设共享能力中枢，统一管理工具、连接器、技能、数据与工作流 5 类能力；将部门知识检索、调用权限、风险确认与执行记录集中到服务端。",
-    },
-    {
-      title: "沙箱治理 · 持续推进",
-      text: "围绕 Agent 代码执行的资源争抢、任务隔离与产物可信性，推进用户 / 会话级容器分配、额度账本、超额准入排队与产物哈希校验回执，持续完善并发恢复和容器生命周期治理。",
-    },
-    {
-      title: "部署交付",
-      text: "搭建公司服务器与 AI 应用运行环境，完成 Docker Compose 服务编排、ComfyUI 模型与节点配置、MySQL / Redis 持久化和内网访问，沉淀部署与维护文档。",
-    },
-  ],
+  company: "重庆独小漾服饰有限公司",
+  role: "AI 应用开发实习生",
+  period: "2026.06.09 — 至今",
+  summary: evaluationData.intro,
+  achievements: evaluationData.duties,
 };
 
 export const experienceProjects = [
   {
     title: "CareerForge-AI",
     period: "2026.05.01 — 2026.06.04",
-    role: "Agent 应用开发 · 团队项目",
+    role: "Agent 应用开发 · 基地自主开发项目",
     description:
       "负责 AI 面试官核心模块，并补齐简历助手关键链路。把简历读取、局部修改、撤销与 PDF 导出做成受约束工具，完成多轮面试、结构化评分和异常兜底。",
     proof: "简历 Agent / AI 面试闭环 / 全栈联调",
@@ -107,7 +87,7 @@ export const experienceProjects = [
   {
     title: "多智能体客服",
     period: "2026.02.15 — 2026.04.29",
-    role: "Agent 应用开发 · 团队项目",
+    role: "Agent 应用开发 · 基地自主开发项目",
     description:
       "从零搭建 LangGraph 工作流，负责意图分类、动态路由、专业 Agent 调度与 SSE 流式输出；为多行、夹标点和中英文混排的分类结果增加规范化与兜底处理。",
     proof: "LangGraph 路由 / RAG / SSE / 团队协作",
@@ -121,11 +101,11 @@ export const projects = [
     id: "duxy-agent",
     index: "01",
     title: "独小漾服装 AI 工作台",
-    label: "企业实习 · 12 名美编 · 日均约 200 张图",
-    summary: "出图提效与异步任务管理：从生成需求到结果归档",
+    label: "企业实习 · 平台 78 人使用 · 美编与运营场景",
+    summary: "美编出图 220 秒 → 72 秒，连接生成任务与运营分析",
     caseStudy: true,
     responsibility: "美编需要频繁完成换色、改款与高清处理，生成等待和跨工具操作影响交付节奏。负责出图工作流优化、Agent 接入、任务与资产管理，以及前后端联调和服务器部署。",
-    delivery: "前 1–2 周完成工作流搭建与迭代；第 3 周启动 Agent，将上传、调用、任务跟踪与结果归档接入同一工作台。",
+    delivery: "将上传、调用、任务跟踪与结果归档接入同一工作台，持续根据美编和运营部门的使用需求迭代。",
     highlights: [
       "统一调用入口：通过显式路由匹配技能与工作流，将 ComfyUI 和图像 API 接入业务任务流程。",
       "保护任务状态：持久化任务与外部任务标识，限制取消后的状态回写，支持恢复已有生成任务。",
@@ -133,11 +113,11 @@ export const projects = [
     ],
     contribution: "缩短典型出图等待，并将生成任务的执行状态与产物接入统一工作台，支持从需求发起到结果归档的业务流程。",
     metricsTitle: "业务规模与出图效果",
-    metricNote: "耗时为同显卡、4K 典型任务的前后对比；人数与日出图量描述团队出图业务规模。",
+    metricNote: "来自本人实习记录：78 人为平台使用人数；耗时为美编出图流程优化前后对比，降幅按 (220−72)÷220 计算。",
     metrics: [
-      { value: "180 → 60 秒", label: "同显卡 · 4K 典型任务" },
-      { value: "12 名", label: "美编使用出图工具" },
-      { value: "约 200 张", label: "团队日均出图量" },
+      { value: "220 → 72 秒", label: "美编出图耗时" },
+      { value: "78 人", label: "平台实际使用人数" },
+      { value: "约 67%", label: "出图耗时降幅" },
     ],
     stack: "Python / LangGraph / FastAPI / React / ComfyUI / MySQL / Redis / Docker",
     livePath: null,
@@ -160,12 +140,12 @@ export const projects = [
       "控制工具执行：将身份、版本、风险确认和调用预算接入执行链，关联请求与任务保留审计记录。",
     ],
     contribution: "让工作台通过统一接口发现和消费企业能力，将调用约束与执行记录集中管理，支持后续接入新的业务工具。",
-    metricsTitle: "能力与知识建设规模",
-    metricNote: "知识空间包含 11 个部门与 1 个通用空间，另支持个人知识库；以上为功能与配置规模。",
+    metricsTitle: "企业知识检索实测",
+    metricNote: "2026-09-14 本机跑批：管理员多空间合并检索；自然题 140/150、分层题 534/650。Hit@5 为金标文档命中指标。",
     metrics: [
-      { value: "5 类", label: "统一管理的能力类型" },
-      { value: "12 个", label: "部门与通用知识空间配置" },
-      { value: "3 种", label: "关键词 / 向量 / 混合检索" },
+      { value: "93.3%", label: "自然题 Hit@5 · 140/150" },
+      { value: "82.2%", label: "分层题 Hit@5 · 534/650" },
+      { value: "650 题", label: "分层评测集规模" },
     ],
     ongoing: {
       title: "沙箱执行治理 · 持续推进",
@@ -181,7 +161,7 @@ export const projects = [
     id: "careerforge",
     index: "03",
     title: "CareerForge-AI",
-    label: "高校学生就业辅助平台",
+    label: "青竹数智科技校企合作基地 · 自主开发项目",
     summary: "简历助手与 AI 面试官的完整 Agentic Loop",
     responsibility:
       "我负责 AI 面试官核心模块，也补齐了简历助手的关键链路。目标不是让模型“给建议”，而是让它能读取、修改、撤销和导出真实简历，并围绕目标岗位完成多轮面试。",
@@ -203,7 +183,7 @@ export const projects = [
     id: "service",
     index: "04",
     title: "多智能体客服",
-    label: "调度中心 + 专业 Agent",
+    label: "青竹数智科技校企合作基地 · 自主开发项目",
     summary: "把不稳定的分类输出变成可维护、可扩展的业务路由",
     responsibility:
       "我从零搭建工作流，用显式状态图组织分类、路由和回复生成。针对分类结果多行、夹标点和中英文混排的问题补了规范化层，让分类结果能稳定进入后续路由。",

@@ -618,11 +618,11 @@ function PortfolioHome() {
           </div>
           <div className="hero-zone hero-title-zone" data-testid="hero-title-zone" onMouseEnter={() => selectStage("plan", 2600)}>
             <span className="red-rule" />
-            <h2 aria-label="把 Agent 从 Demo 做到可交付产品"><span>把 Agent 从 Demo</span><span>做到可交付产品</span></h2>
+            <h2 aria-label="让 Agent 进入业务，让工程产生实效"><span>让 Agent 进入业务</span><span>让工程产生实效</span></h2>
           </div>
           <div className="hero-zone hero-stack" onMouseEnter={() => selectStage("decide", 2600)}>
             <p>Agent 应用开发 · LangGraph · RAG · Harness Engineering</p>
-            <small>在服装企业交付 AI 出图工作流、业务 Agent 与能力中枢，把模型能力落到团队每天使用的工具里。</small>
+            <small>在服装企业负责 RAG、ComfyUI、沙箱治理与能力中枢，为 78 名同事连接知识、图像与数据处理能力。</small>
           </div>
           <div className="hero-actions" onMouseEnter={() => selectStage("tools", 2600)}>
             <a className="primary-button" href="#projects">
@@ -640,9 +640,9 @@ function PortfolioHome() {
             </a>
           </div>
           <div className="hero-metrics" onMouseEnter={() => selectStage("verify", 2600)}>
-            <div><strong>12 名</strong><span>美编实际使用</span></div>
-            <div><strong>约 200 张 / 日</strong><span>团队日常出图量</span></div>
-            <div><strong>耗时降低约 67%</strong><span>4K 典型出图 · 180 → 60 秒</span></div>
+            <div><strong>78 人</strong><span>企业平台实际使用</span></div>
+            <div><strong>220 → 72 秒</strong><span>美编出图耗时</span></div>
+            <div><strong>减少约 67%</strong><span>出图流程优化成效</span></div>
           </div>
           <div
             ref={insightMaskRef}
@@ -690,10 +690,10 @@ function PortfolioHome() {
           <div><span className="section-index">/ 02</span><h2>关于我</h2></div>
         </div>
         <div className="about-grid">
-          <p className="about-lead">我关注的不是模型能说什么，而是它如何在真实业务里稳定地完成一件事。</p>
+          <p className="about-lead">我的工作，是把模型能力转化为有权限边界、可追踪结果的业务工具。</p>
           <div className="about-copy">
-            <p>重庆工程学院软件工程本科在读，2027 届。在重庆独小漾服装有限公司担任 AI 工程师实习生，负责 AI 出图、业务 Agent、能力中枢与服务器部署。</p>
-            <p>从美编的出图效率出发，逐步完成工作流优化、应用开发与基础设施搭建。我擅长把需求拆解成可执行链路，再通过联调、验证与迭代完成交付。</p>
+            <p>重庆工程学院软件工程本科在读，2027 届。2026 年 6 月起在重庆独小漾服饰有限公司担任 AI 应用开发实习生，负责企业 RAG、图像工作流与 Agent 执行治理。</p>
+            <p>把美编出图耗时从 220 秒缩短至 72 秒，并支持运营部分析门店数据、为整改提供依据。自主开发 CareerForge-AI 与多智能体客服，持续实践工具调用、状态管理和检索工程。</p>
           </div>
         </div>
       </section>
@@ -719,9 +719,9 @@ function PortfolioHome() {
       <section className="experience section" id="experience">
         <div className="section-heading">
           <div><span className="section-index">/ 04</span><h2>经历</h2></div>
-          <p>企业实习与校企项目，覆盖 AI 出图提效、Agent 应用、能力中枢及部署交付。</p>
+          <p>企业实习与基地自主开发项目，展示业务背景、个人职责和实际应用成效。</p>
         </div>
-        <article className="internship-card" aria-label="重庆独小漾服装有限公司实习经历">
+        <article className="internship-card" aria-label="重庆独小漾服饰有限公司实习经历">
           <div className="internship-heading">
             <div>
               <span className="detail-label">INDUSTRY EXPERIENCE</span>
@@ -742,7 +742,7 @@ function PortfolioHome() {
             <span className="detail-label">SCHOOL–ENTERPRISE BASE</span>
             <h3>青竹数智科技校企合作基地</h3>
           </div>
-          <p>Agent 应用开发 · 团队开发经验</p>
+          <p>基地自主开发项目 · CareerForge-AI / 多智能体客服</p>
           <p>重庆工程学院 · 软件工程本科 · 2027 届</p>
         </div>
         <div className="experience-grid">

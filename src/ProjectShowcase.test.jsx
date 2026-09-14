@@ -60,3 +60,20 @@ it("renders the CareerForge case at the destination advertised by its project li
   expect(screen.getByRole("link", { name: "查看源码" })).toHaveAttribute("href", "https://github.com/lwxiaoye/CareerForge-AI");
   expect(screen.getByText("项目案例 · 核心实现说明")).toBeVisible();
 });
+
+it("keeps evaluation scope next to reported RAG results", () => {
+  window.history.replaceState({}, "", "/showcase/duxy-hub/");
+  render(<App />);
+  expect(screen.getByText("93.3%（140/150）")).toBeVisible();
+  expect(screen.getByText("82.2%（534/650）")).toBeVisible();
+  expect(screen.getByText(/并非人工回答正确率/)).toBeVisible();
+  expect(screen.getByText(/不能视为权限隔离验收通过/)).toBeVisible();
+});
+
+it("labels scenario checks and removes editorial screenshot notes", () => {
+  window.history.replaceState({}, "", "/showcase/duxy-agent/");
+  render(<App />);
+  expect(screen.getByText("84.4%（38/45）")).toBeVisible();
+  expect(screen.getByText(/未验收最终图片或分析质量/)).toBeVisible();
+  expect(screen.queryByText(/直接使用本人提供的资产库截图/)).not.toBeInTheDocument();
+});
